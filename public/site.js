@@ -179,80 +179,37 @@ if('IntersectionObserver'in window){
 document.addEventListener('visibilitychange',syncVideos);
 reduced.addEventListener('change',()=>{refreshMediaToggles();syncVideos()});
 
-const visits=$('#estimate-visits'),rate=$('#estimate-rate'),increase=$('#estimate-increase'),closing=$('#estimate-closing');
-const gain=$('#estimate-gain'),before=$('#estimate-before'),after=$('#estimate-after'),sales=$('#estimate-sales'),announcement=$('#estimate-announcement');
-const results=$('.conversion-results');
-const number=new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1});
-function estimate(traffic,current,lift,saleRate){
- const currentDemand=traffic*current/100,nextDemand=traffic*Math.min(100,current+lift)/100;
- const base=Math.round(currentDemand),total=Math.round(nextDemand);
- const extraSales=Math.round((nextDemand-currentDemand)*saleRate/10)/10;
- return [base,total,total-base,extraSales];
+const scenarioStats=$('[data-scenario-stats]');
+const scenarioValues=$$('[data-scenario-value]',scenarioStats).map(node=>({
+ node, label:node.textContent, target:parseInt(node.textContent,10)
+}));
+let scenarioFrame=0;
+function finishScenario(){
+ cancelAnimationFrame(scenarioFrame);
+ delete scenarioStats.dataset.countFocus;
+ for(const {node,label} of scenarioValues)node.textContent=label;
 }
-function estimateValues(){
- return estimate(...[visits,rate,increase,closing].map(field=>clamp(field.valueAsNumber||0,0,Number(field.max))));
-}
-function formatGain(value){return (value>0?'+':'')+number.format(value)}
-let estimateAnimation=0,estimateTimer=0,estimateVisible=false,displayed=estimateValues();
-function paintEstimate(values){
- displayed=values;
- const [base,total,extra,extraSales]=values;
- for(const [node,value] of [[before,number.format(base)],[after,number.format(total)],[gain,formatGain(extra)],[sales,formatGain(extraSales)]]){
-  if(node.textContent!==value)node.textContent=value;
- }
-}
-function stopEstimate(){
- cancelAnimationFrame(estimateAnimation);clearTimeout(estimateTimer);
- delete results.dataset.countFocus;
-}
-function animateEstimate(from,to,entrance){
- stopEstimate();
- if(reduced.matches||!estimateVisible){paintEstimate(to);return}
- let last=performance.now(),elapsed=0;
- const duration=entrance?570:390,delays=entrance?[0,95,260,465]:[0,40,90,170];
- paintEstimate(from);
- function count(time){
-  elapsed+=clamp(time-last,0,48);last=time;
-  const phase=elapsed>=delays[3]?3:elapsed>=delays[2]?2:1;
-  if(results.dataset.countFocus!==String(phase))results.dataset.countFocus=phase;
-  paintEstimate(to.map((value,i)=>{
-   const t=clamp((elapsed-delays[i])/duration,0,1);
-   const next=from[i]+(value-from[i])*(1-(1-t)**3);
-   return i===3?Math.round(next*10)/10:Math.round(next);
-  }));
-  if(elapsed<duration+delays[3])estimateAnimation=requestAnimationFrame(count);
-  else delete results.dataset.countFocus;
- }
- estimateAnimation=requestAnimationFrame(count);
-}
-function updateEstimate(){
- stopEstimate();
- const values=estimateValues();
- if(reduced.matches||!estimateVisible)paintEstimate(values);
- else estimateTimer=setTimeout(()=>animateEstimate(displayed,values,false),150);
- const [base,total,extra,extraSales]=values;
- announcement.textContent=number.format(base)+' demandes aujourd’hui, '+number.format(total)+' dans ce scénario. '+number.format(extra)+' demandes et '+number.format(extraSales)+' vente'+(extraSales>1?'s':'')+' de plus par mois, en estimation.';
-}
-for(const field of [visits,rate,increase,closing]){
- field.addEventListener('input',updateEstimate);
- field.addEventListener('change',()=>{
-  if(Number.isFinite(field.valueAsNumber)&&!field.validity.valid){
-   field.value=String(clamp(field===visits?Math.round(field.valueAsNumber):field.valueAsNumber,0,Number(field.max)));
-   updateEstimate();
+if('IntersectionObserver'in window&&!reduced.matches){
+ const observer=new IntersectionObserver(([entry])=>{
+  if(!entry.isIntersecting)return;
+  observer.disconnect();
+  if(reduced.matches)return;
+  const start=performance.now(),duration=550,delay=180;
+  function count(time){
+   const elapsed=time-start;
+   scenarioStats.dataset.countFocus=Math.min(3,1+Math.floor(elapsed/delay));
+   scenarioValues.forEach(({node,label,target},i)=>{
+    const progress=clamp((elapsed-i*delay)/duration,0,1);
+    node.textContent=label.replace(/\d+/,String(Math.round(target*(1-(1-progress)**3))));
+   });
+   if(elapsed<duration+delay*(scenarioValues.length-1))scenarioFrame=requestAnimationFrame(count);
+   else finishScenario();
   }
- });
+  count(start);
+ },{threshold:.3});
+ observer.observe(scenarioStats);
 }
-if('IntersectionObserver'in window){
- const counts=new IntersectionObserver(([entry])=>{
-  if(entry.intersectionRatio>=.48&&!estimateVisible){
-   estimateVisible=true;animateEstimate([0,0,0,0],estimateValues(),true);
-  }else if(entry.intersectionRatio<=.14&&estimateVisible){
-   estimateVisible=false;stopEstimate();paintEstimate(estimateValues());
-  }
- },{threshold:[.14,.48]});
- counts.observe(results);
-}
-reduced.addEventListener('change',()=>{stopEstimate();paintEstimate(estimateValues())});
+reduced.addEventListener('change',finishScenario);
 
 const form=$('#devis'),status=$('#form-status'),formMode=$('#form-mode'),submit=$('button[type=submit]',form);
 $$('[data-need]').forEach(a=>a.addEventListener('click',()=>{form.elements.besoin.value=a.dataset.need}));

@@ -23,6 +23,6 @@ Pour activer l’envoi direct, renseigner dans Cloudflare les secrets `RESEND_AP
 
 Le logo et les médias sont dans `public/assets/`. Les plans filmés et les photos de la section « Pour qui ? » viennent de Pexels. Les auteurs et les sources sont regroupés dans les mentions légales. Les vidéos silencieuses bouclent dans la zone visible ; dans la galerie, seule la carte au premier plan est lue. Les images fixes restent accessibles si la lecture est désactivée ou si les animations sont réduites.
 
-Le simulateur estime les demandes à trafic constant à partir des taux actuel et envisagé. Il applique ensuite le taux de conclusion saisi à la différence de demandes avant arrondi, pour afficher une estimation des ventes supplémentaires au dixième près. Les valeurs proposées sont un scénario ajustable, sans prévision de résultat.
+Le scénario illustratif suppose que les demandes mensuelles passent de 20 à 35 à trafic égal. Avec un taux de conclusion de 20 %, les 15 contacts supplémentaires représentent 3 ventes estimées.
 
 Les coordonnées juridiques, les durées de conservation et les modalités commerciales restent à valider avec l’exploitant avant d’utiliser le site pour la prospection.

@@ -87,24 +87,17 @@
 
 <section class="section conversion-section" id="conversion" aria-labelledby="conversion-title">
   <div class="wrap">
-    <div class="intro" data-reveal><p class="eyebrow">Estimation interactive</p><h2 id="conversion-title" data-words>Des visites aux ventes.</h2><p>Estimez ce qu’une hausse des demandes pourrait représenter, à trafic égal.</p></div>
-    <div class="conversion-layout">
-      <div class="conversion-card">
-        <div class="conversion-fields">
-          <label>Visites par mois<input id="estimate-visits" type="number" value="1000" min="0" max="1000000" step="1" inputmode="numeric"></label>
-          <label>Taux de demande actuel (%)<input id="estimate-rate" type="number" value="2" min="0" max="100" step="any" inputmode="decimal"></label>
-          <label>Hausse envisagée (points)<input id="estimate-increase" type="number" value="0.5" min="0" max="100" step="any" inputmode="decimal" aria-describedby="estimate-note"></label>
-          <label>Demandes conclues en vente (%)<input id="estimate-closing" type="number" value="20" min="0" max="100" step="any" inputmode="decimal" aria-describedby="estimate-note"></label>
-        </div>
-        <p id="estimate-note" class="estimate-note">Un point fait passer de 2 % à 3 %. Les ventes estimées dépendent de votre taux de conclusion ; cette simulation ne garantit aucun résultat.</p>
-      </div>
-      <div class="conversion-results sales-stats">
-        <div class="stat-card"><i aria-hidden="true"><svg><use href="#chart"/></svg></i><div><strong><span id="estimate-before">20</span> <svg aria-hidden="true"><use href="#arrow"/></svg> <span id="estimate-after">25</span></strong><p>Demandes par mois · actuel → scénario</p></div></div>
-        <div class="stat-card"><i aria-hidden="true"><svg><use href="#mail"/></svg></i><div><strong id="estimate-gain">+5</strong><p>Demandes de contact en plus par mois</p></div></div>
-        <div class="stat-card stat-sales"><i aria-hidden="true"><svg><use href="#spark"/></svg></i><div><strong id="estimate-sales">+1</strong><p>Ventes supplémentaires estimées par mois</p></div></div>
-      </div>
-      <p id="estimate-announcement" class="visually-hidden" role="status">20 demandes aujourd’hui, 25 dans ce scénario, soit 5 demandes et 1 vente estimée de plus par mois.</p>
+    <div class="intro" data-reveal>
+      <p class="eyebrow">Scénario illustratif</p>
+      <h2 id="conversion-title" data-words>Des visites aux ventes.</h2>
+      <p>Que pourrait représenter une hausse des demandes, à trafic égal ?</p>
     </div>
+    <div class="conversion-results sales-stats" data-scenario-stats>
+      <div class="stat-card"><i aria-hidden="true"><svg><use href="#chart"/></svg></i><div><strong data-scenario-value aria-hidden="true">+75 %</strong><span class="visually-hidden">+75 %</span><p>de demandes</p></div></div>
+      <div class="stat-card"><i aria-hidden="true"><svg><use href="#mail"/></svg></i><div><strong data-scenario-value aria-hidden="true">+15</strong><span class="visually-hidden">+15</span><p>contacts par mois</p></div></div>
+      <div class="stat-card stat-sales"><i aria-hidden="true"><svg><use href="#spark"/></svg></i><div><strong data-scenario-value aria-hidden="true">+3</strong><span class="visually-hidden">+3</span><p>ventes estimées en plus par mois</p></div></div>
+    </div>
+    <p class="estimate-note">Exemple hypothétique avec 20 demandes mensuelles qui passent à 35 et 1 demande sur 5 qui aboutit à une vente.</p>
   </div>
 </section>
 
