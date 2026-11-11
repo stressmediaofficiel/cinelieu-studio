@@ -98,7 +98,7 @@ let galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);
 addEventListener('resize',()=>{galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);queue()},{passive:true});
 function readGalleryLayer(height){
  const rect=gallery.getBoundingClientRect(),line=height*.59;
- if(rect.top>line||rect.bottom<Math.min(155,height*.3))return -1;
+ if(rect.top>=height||rect.bottom<Math.min(155,height*.3))return -1;
  const handoff=Number.isFinite(galleryPin)?Math.min(line,galleryPin+36):line;
  let layer=0;
  for(let i=1;i<galleryMarks.length;i++)if(galleryMarks[i].getBoundingClientRect().top<=handoff)layer=i;
@@ -123,13 +123,15 @@ const mediaFrames=new Map($$('[data-film-frame]').map(frame=>{
  return [frame,state];
 }));
 function syncVideo(frame,state){
- const {video,layer}=state,active=state.visible&&(layer<0||layer===galleryLayer)&&!mediaPaused&&!reduced.matches&&!document.hidden;
+ const {video,layer}=state;
+ const available=layer<0||(galleryLayer>=0&&layer>=galleryLayer);
+ const active=state.visible&&available&&!mediaPaused&&!reduced.matches&&!document.hidden;
  if(state.active===active)return;
  state.active=active;
  clearTimeout(state.timer);
  if(!active){video.pause();frame.classList.remove('is-playing');return}
  if(!video.getAttribute('src'))video.src=video.dataset.src;
- else if(video.readyState)video.currentTime=0;
+ else if(layer<0&&video.readyState)video.currentTime=0;
  if(video.dataset.playbackRate){
   const rate=Number(video.dataset.playbackRate);
   video.defaultPlaybackRate=rate;
@@ -153,11 +155,25 @@ refreshMediaToggles();
 if('IntersectionObserver'in window){
  const films=new IntersectionObserver(entries=>entries.forEach(({target,intersectionRatio})=>{
   const state=mediaFrames.get(target);
-  if(intersectionRatio>=.5)state.visible=true;
-  else if(intersectionRatio<=.15)state.visible=false;
+  const galleryFilm=state.layer>=0;
+  if(intersectionRatio>=(galleryFilm ? .12 : .5))state.visible=true;
+  else if(intersectionRatio<=(galleryFilm ? .03 : .15))state.visible=false;
   syncVideo(target,state);
- }),{threshold:[.15,.5]});
+ }),{threshold:[.03,.12,.15,.5]});
  for(const frame of mediaFrames.keys())films.observe(frame);
+ const preloadGallery=new IntersectionObserver(entries=>{
+  if(mediaPaused||reduced.matches)return;
+  for(const {target,isIntersecting} of entries){
+   if(!isIntersecting)continue;
+   const {video}=mediaFrames.get(target);
+   if(!video.hasAttribute('src')){
+    video.preload='auto';
+    video.src=video.dataset.src;
+   }
+   preloadGallery.unobserve(target);
+  }
+ },{rootMargin:'420px 0px'});
+ galleryCards.forEach(frame=>preloadGallery.observe(frame));
  const buttons=new IntersectionObserver(entries=>entries.forEach(({target,intersectionRatio})=>{
   if(intersectionRatio>=.68)target.classList.add('is-visible');
   else if(intersectionRatio<=.18)target.classList.remove('is-visible');
@@ -201,7 +217,7 @@ let widget=null,direct=false;
 function showStatus(msg,error=false){status.textContent=msg;status.toggleAttribute('data-error',error)}
 function mailto(data){
  const type=form.elements.besoin.selectedOptions[0].textContent;
- const body=['Bonjour Marc,','','Je souhaite discuter de ce projet vidéo :','',data.message,'','Nom : '+data.nom,'Entreprise : '+data.entreprise,'E-mail : '+data.email,'Besoin : '+type].join('\r\n');
+ const body=['Bonjour à l’équipe CINÉLIEU,','','Je souhaite discuter de ce projet vidéo :','',data.message,'','Nom : '+data.nom,'Entreprise : '+data.entreprise,'E-mail : '+data.email,'Besoin : '+type].join('\r\n');
  return $('.contact-mail').getAttribute('href').split('?')[0]+'?subject='+encodeURIComponent('Demande CINÉLIEU — '+type)+'&body='+encodeURIComponent(body);
 }
 async function configContact(){
@@ -210,7 +226,7 @@ async function configContact(){
   if(!r.ok||!r.headers.get('content-type')?.includes('application/json'))return;
   const cfg=await r.json();if(!cfg.enabled||!cfg.siteKey)return;
   const s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;
-  s.onload=()=>{try{$('#antispam').hidden=false;widget=window.turnstile.render('#antispam',{sitekey:cfg.siteKey,language:'fr'});direct=true;formMode.textContent='Votre demande est transmise à Marc Brioche.'}catch{$('#antispam').hidden=true}};
+  s.onload=()=>{try{$('#antispam').hidden=false;widget=window.turnstile.render('#antispam',{sitekey:cfg.siteKey,language:'fr'});direct=true;formMode.textContent='Votre demande est transmise à l’équipe CINÉLIEU.'}catch{$('#antispam').hidden=true}};
   document.head.append(s);
  }catch{/* Le brouillon e-mail reste disponible. */}
 }

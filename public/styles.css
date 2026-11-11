@@ -230,6 +230,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
  transition:transform .42s cubic-bezier(.2,.73,.25,1),border-color .36s
 }
 .stack-card.is-covered{border-color:#739788}
+.stack-card video{transition-duration:.12s}
 .gallery .media-tools{max-width:1040px;margin-top:0}
 .gallery .media-toggle{background:#25372d;border-color:#4c695a;color:#e6f5eb}
 .gallery .media-toggle:hover{border-color:#78d79c}
