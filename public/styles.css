@@ -386,10 +386,11 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 }
 
 /* Tarifs */
+#tarifs{padding-top:clamp(70px,8vw,112px)}
 #tarifs .pricing-intro{
  max-width:780px;margin:0 auto clamp(38px,5vw,60px);text-align:center
 }
-#tarifs .pricing-intro h2{font-size:clamp(2.65rem,5.6vw,4.8rem)}
+#tarifs .pricing-intro h2{font-size:clamp(2.65rem,5.6vw,4.8rem);text-wrap:balance}
 #tarifs .pricing{
  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,26px)
 }
