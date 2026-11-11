@@ -57,7 +57,9 @@ function scrollEffects(){
  tick=0;
  const height=innerHeight,doc=document.documentElement,ratio=clamp(scrollY/Math.max(1,doc.scrollHeight-height),0,1);
  const rect=method.getBoundingClientRect();
+ const layer=readGalleryLayer(height);
  progress.style.transform='scaleX('+ratio+')';
+ showGalleryLayer(layer);
  if(rect.top>=height||rect.bottom<=0)return;
  const line=height*.55-rect.top;
  let next=0;
@@ -107,8 +109,29 @@ if('IntersectionObserver'in window){
 reduced.addEventListener('change',queueServices);
 document.addEventListener('visibilitychange',queueServices);
 
+const gallery=$('[data-gallery-stack]'),galleryMarks=$$('.stack-mark',gallery),galleryCards=$$('.stack-card',gallery);
+let galleryLayer=-1,mediaPaused=false;
+let galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);
+addEventListener('resize',()=>{galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);queue()},{passive:true});
+function readGalleryLayer(height){
+ const rect=gallery.getBoundingClientRect(),line=height*.59;
+ if(rect.top>line||rect.bottom<Math.min(155,height*.3))return -1;
+ const handoff=Number.isFinite(galleryPin)?Math.min(line,galleryPin+36):line;
+ let layer=0;
+ for(let i=1;i<galleryMarks.length;i++)if(galleryMarks[i].getBoundingClientRect().top<=handoff)layer=i;
+ return layer;
+}
+function showGalleryLayer(layer){
+ if(layer===galleryLayer)return;
+ galleryLayer=layer;
+ gallery.dataset.activeLayer=layer;
+ galleryCards.forEach((card,i)=>{
+  card.classList.toggle('is-covered',layer>=0&&i<layer);
+  syncVideo(card,mediaFrames.get(card));
+ });
+}
 const mediaFrames=new Map($$('[data-film-frame]').map(frame=>{
- const video=$('[data-flow-video]',frame),state={video,visible:false,active:false};
+ const video=$('[data-flow-video]',frame),state={video,visible:false,active:false,timer:0,layer:galleryCards.indexOf(frame)};
  video.addEventListener('playing',()=>{
   if(state.active)frame.classList.add('is-playing');
   else video.pause();
@@ -117,15 +140,28 @@ const mediaFrames=new Map($$('[data-film-frame]').map(frame=>{
  return [frame,state];
 }));
 function syncVideo(frame,state){
- const {video}=state,active=state.visible&&!reduced.matches&&!document.hidden;
+ const {video,layer}=state,active=state.visible&&(layer<0||layer===galleryLayer)&&!mediaPaused&&!reduced.matches&&!document.hidden;
  if(state.active===active)return;
  state.active=active;
+ clearTimeout(state.timer);
  if(!active){video.pause();frame.classList.remove('is-playing');return}
  if(!video.getAttribute('src'))video.src=video.dataset.src;
  else if(video.readyState)video.currentTime=0;
- video.play().catch(()=>{});
+ if(frame.classList.contains('scan-frame'))state.timer=setTimeout(()=>video.play().catch(()=>{}),220);
+ else video.play().catch(()=>{});
 }
 function syncVideos(){for(const [frame,state] of mediaFrames)syncVideo(frame,state)}
+const mediaToggles=$$('[data-media-toggle]');
+function refreshMediaToggles(){
+ for(const button of mediaToggles){
+  button.hidden=reduced.matches||!('IntersectionObserver'in window);
+  button.textContent=mediaPaused?'Reprendre les vidéos':'Mettre les vidéos en pause';
+ }
+}
+for(const button of mediaToggles)button.addEventListener('click',()=>{
+ mediaPaused=!mediaPaused;refreshMediaToggles();syncVideos();
+});
+refreshMediaToggles();
 if('IntersectionObserver'in window){
  const films=new IntersectionObserver(entries=>entries.forEach(({target,intersectionRatio})=>{
   const state=mediaFrames.get(target);
@@ -141,25 +177,27 @@ if('IntersectionObserver'in window){
  $$('[data-view-cta]').forEach(button=>buttons.observe(button));
 }
 document.addEventListener('visibilitychange',syncVideos);
-reduced.addEventListener('change',syncVideos);
+reduced.addEventListener('change',()=>{refreshMediaToggles();syncVideos()});
 
-const visits=$('#estimate-visits'),rate=$('#estimate-rate'),increase=$('#estimate-increase');
-const gain=$('#estimate-gain'),before=$('#estimate-before'),after=$('#estimate-after'),announcement=$('#estimate-announcement');
+const visits=$('#estimate-visits'),rate=$('#estimate-rate'),increase=$('#estimate-increase'),closing=$('#estimate-closing');
+const gain=$('#estimate-gain'),before=$('#estimate-before'),after=$('#estimate-after'),sales=$('#estimate-sales'),announcement=$('#estimate-announcement');
 const results=$('.conversion-results');
-const number=new Intl.NumberFormat('fr-FR');
-function estimate(traffic,current,lift){
- const base=Math.round(traffic*current/100);
- const total=Math.round(traffic*Math.min(100,current+lift)/100);
- return [base,total,total-base];
+const number=new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1});
+function estimate(traffic,current,lift,saleRate){
+ const currentDemand=traffic*current/100,nextDemand=traffic*Math.min(100,current+lift)/100;
+ const base=Math.round(currentDemand),total=Math.round(nextDemand);
+ const extraSales=Math.round((nextDemand-currentDemand)*saleRate/10)/10;
+ return [base,total,total-base,extraSales];
 }
 function estimateValues(){
- return estimate(...[visits,rate,increase].map(field=>clamp(field.valueAsNumber||0,0,Number(field.max))));
+ return estimate(...[visits,rate,increase,closing].map(field=>clamp(field.valueAsNumber||0,0,Number(field.max))));
 }
+function formatGain(value){return (value>0?'+':'')+number.format(value)}
 let estimateAnimation=0,estimateTimer=0,estimateVisible=false,displayed=estimateValues();
 function paintEstimate(values){
  displayed=values;
- const [base,total,extra]=values;
- for(const [node,value] of [[before,number.format(base)],[after,number.format(total)],[gain,(extra>0?'+':'')+number.format(extra)]]){
+ const [base,total,extra,extraSales]=values;
+ for(const [node,value] of [[before,number.format(base)],[after,number.format(total)],[gain,formatGain(extra)],[sales,formatGain(extraSales)]]){
   if(node.textContent!==value)node.textContent=value;
  }
 }
@@ -171,17 +209,18 @@ function animateEstimate(from,to,entrance){
  stopEstimate();
  if(reduced.matches||!estimateVisible){paintEstimate(to);return}
  let last=performance.now(),elapsed=0;
- const duration=entrance?570:390,delays=entrance?[0,180,380]:[0,60,120];
+ const duration=entrance?570:390,delays=entrance?[0,95,260,465]:[0,40,90,170];
  paintEstimate(from);
  function count(time){
   elapsed+=clamp(time-last,0,48);last=time;
-  const phase=elapsed>=delays[2]?3:elapsed>=delays[1]?2:1;
+  const phase=elapsed>=delays[3]?3:elapsed>=delays[2]?2:1;
   if(results.dataset.countFocus!==String(phase))results.dataset.countFocus=phase;
   paintEstimate(to.map((value,i)=>{
    const t=clamp((elapsed-delays[i])/duration,0,1);
-   return Math.round(from[i]+(value-from[i])*(1-(1-t)**3));
+   const next=from[i]+(value-from[i])*(1-(1-t)**3);
+   return i===3?Math.round(next*10)/10:Math.round(next);
   }));
-  if(elapsed<duration+delays[2])estimateAnimation=requestAnimationFrame(count);
+  if(elapsed<duration+delays[3])estimateAnimation=requestAnimationFrame(count);
   else delete results.dataset.countFocus;
  }
  estimateAnimation=requestAnimationFrame(count);
@@ -191,10 +230,10 @@ function updateEstimate(){
  const values=estimateValues();
  if(reduced.matches||!estimateVisible)paintEstimate(values);
  else estimateTimer=setTimeout(()=>animateEstimate(displayed,values,false),150);
- const [base,total,extra]=values;
- announcement.textContent=number.format(base)+' demandes aujourd’hui, '+number.format(total)+' dans ce scénario. '+number.format(extra)+' de plus par mois.';
+ const [base,total,extra,extraSales]=values;
+ announcement.textContent=number.format(base)+' demandes aujourd’hui, '+number.format(total)+' dans ce scénario. '+number.format(extra)+' demandes et '+number.format(extraSales)+' vente'+(extraSales>1?'s':'')+' de plus par mois, en estimation.';
 }
-for(const field of [visits,rate,increase]){
+for(const field of [visits,rate,increase,closing]){
  field.addEventListener('input',updateEstimate);
  field.addEventListener('change',()=>{
   if(Number.isFinite(field.valueAsNumber)&&!field.validity.valid){
@@ -206,7 +245,7 @@ for(const field of [visits,rate,increase]){
 if('IntersectionObserver'in window){
  const counts=new IntersectionObserver(([entry])=>{
   if(entry.intersectionRatio>=.48&&!estimateVisible){
-   estimateVisible=true;animateEstimate([0,0,0],estimateValues(),true);
+   estimateVisible=true;animateEstimate([0,0,0,0],estimateValues(),true);
   }else if(entry.intersectionRatio<=.14&&estimateVisible){
    estimateVisible=false;stopEstimate();paintEstimate(estimateValues());
   }

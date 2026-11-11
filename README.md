@@ -21,8 +21,8 @@ Pour activer l’envoi direct, renseigner dans Cloudflare les secrets `RESEND_AP
 
 ## Contenus
 
-Le logo et les médias sont dans `public/assets/`. Les cinq MP4 `flow-*` sont des plans filmés sous licence Pexels, hébergés sur le site. Les auteurs et sources sont regroupés dans les mentions légales. Chaque plan silencieux dure moins de cinq secondes, démarre lorsqu’il est visible, puis s’arrête ; l’image fixe reste disponible quand la lecture automatique est désactivée.
+Le logo et les médias sont dans `public/assets/`. Les plans filmés et les photos de la section « Pour qui ? » viennent de Pexels. Les auteurs et les sources sont regroupés dans les mentions légales. Les vidéos silencieuses bouclent dans la zone visible ; dans la galerie, seule la carte au premier plan est lue. Les images fixes restent accessibles si la lecture est désactivée ou si les animations sont réduites.
 
-Le simulateur donne un ordre de grandeur à trafic constant : il multiplie les visites mensuelles par le taux de conversion actuel, puis par le taux envisagé. Les valeurs proposées sont un scénario ajustable, sans prévision de résultat.
+Le simulateur estime les demandes à trafic constant à partir des taux actuel et envisagé. Il applique ensuite le taux de conclusion saisi à la différence de demandes avant arrondi, pour afficher une estimation des ventes supplémentaires au dixième près. Les valeurs proposées sont un scénario ajustable, sans prévision de résultat.
 
 Les coordonnées juridiques, les durées de conservation et les modalités commerciales restent à valider avec l’exploitant avant d’utiliser le site pour la prospection.
