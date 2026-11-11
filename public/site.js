@@ -133,6 +133,11 @@ function syncVideo(frame,state){
  if(!active){video.pause();frame.classList.remove('is-playing');return}
  if(!video.getAttribute('src'))video.src=video.dataset.src;
  else if(video.readyState)video.currentTime=0;
+ if(video.dataset.playbackRate){
+  const rate=Number(video.dataset.playbackRate);
+  video.defaultPlaybackRate=rate;
+  video.playbackRate=rate;
+ }
  if(frame.classList.contains('scan-frame'))state.timer=setTimeout(()=>video.play().catch(()=>{}),220);
  else video.play().catch(()=>{});
 }
@@ -161,6 +166,13 @@ if('IntersectionObserver'in window){
   else if(intersectionRatio<=.18)target.classList.remove('is-visible');
  }),{threshold:[.18,.68]});
  $$('[data-view-cta]').forEach(button=>buttons.observe(button));
+ const journey=new IntersectionObserver(entries=>{
+  for(const {target,intersectionRatio} of entries){
+   if(intersectionRatio>=.46)target.classList.add('is-illustrated');
+   else if(intersectionRatio<=.08)target.classList.remove('is-illustrated');
+  }
+ },{threshold:[.08,.46]});
+ $$('[data-journey-step]').forEach(step=>journey.observe(step));
 }
 document.addEventListener('visibilitychange',syncVideos);
 reduced.addEventListener('change',()=>{refreshMediaToggles();syncVideos()});

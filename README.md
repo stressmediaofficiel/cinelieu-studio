@@ -21,7 +21,7 @@ Pour activer l’envoi direct, renseigner dans Cloudflare les secrets `RESEND_AP
 
 ## Contenus
 
-Le logo et les médias sont dans `public/assets/`. Les plans filmés et les photos de la section « Pour qui ? » viennent de Pexels. Les auteurs et les sources sont regroupés dans les mentions légales. Les vidéos silencieuses bouclent dans la zone visible ; dans la galerie, seule la carte au premier plan est lue. Les images fixes restent accessibles si la lecture est désactivée ou si les animations sont réduites.
+Le logo et les médias sont dans `public/assets/`. Les plans filmés et les photos de démonstration viennent de Pexels. Les auteurs et les sources sont regroupés dans les mentions légales. Les vidéos silencieuses bouclent dans la zone visible ; dans la galerie, seule la carte au premier plan est lue. Les images fixes restent accessibles si la lecture est désactivée ou si les animations sont réduites.
 
 Le scénario illustratif suppose que les demandes mensuelles passent de 20 à 35 à trafic égal. Avec un taux de conclusion de 20 %, les 15 contacts supplémentaires représentent 3 ventes estimées.
 
