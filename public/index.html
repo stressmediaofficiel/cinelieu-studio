@@ -69,83 +69,73 @@
       <a href="#contact" data-need="aperçu" class="btn btn-light magnetic">Demander un aperçu <svg><use href="#up-right"/></svg></a>
     </div>
     <div class="hero-scene">
-      <div class="scene-frame tilt">
-        <picture><source media="(max-width: 740px)" srcset="/assets/villa-mobile.webp"><img src="/assets/villa.webp" class="hero-photo" width="1440" height="810" alt="Salon provençal contemporain aux grandes baies ouvertes sur des oliviers, image de démonstration" fetchpriority="high"></picture>
-        <video class="hero-video" data-src="/assets/villa.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
+      <div class="scene-frame">
+        <img src="/assets/film-interieurs.webp" class="hero-photo" width="1280" height="720" alt="Salon contemporain ouvert sur un jardin par de grandes baies vitrées" fetchpriority="high">
+        <video class="hero-video" data-src="/assets/film-interieurs.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
         <div class="scene-glass" aria-hidden="true"></div>
-        <span class="scene-tag"><i></i> Démonstration illustrative</span>
-        <span class="scene-format" aria-hidden="true">16:9</span>
-        <button class="hero-play icon-btn" type="button" data-film="villa" aria-label="Voir la démonstration de la villa"><svg><use href="#play"/></svg></button>
-        <div class="scene-caption"><span>Des lieux qui prennent vie.</span><span class="scene-line" aria-hidden="true"></span></div>
+        <span class="scene-tag"><i></i> Film d’illustration</span>
+        <button class="hero-play icon-btn" type="button" data-film="film-interieurs" aria-label="Voir le film d’illustration"><svg><use href="#play"/></svg></button>
       </div>
       <div class="float-card float-photo" aria-hidden="true">
-        <img src="/assets/villa-thumb.webp" width="104" height="68" alt="">
-        <span><small>Point de départ</small>Photo originale</span>
+        <img src="/assets/film-interieurs.webp" width="104" height="68" alt="" loading="lazy">
+        <span><small>Point de départ</small>Un cadre</span>
       </div>
       <div class="float-card float-video" aria-hidden="true">
         <span class="float-icon"><svg><use href="#film"/></svg></span>
-        <span><small>Animation numérique</small>Vidéo cinématique</span>
+        <span><small>En mouvement</small>Un film</span>
         <svg class="float-arrow"><use href="#up-right"/></svg>
       </div>
     </div>
-    <a class="scroll-cue" href="#demonstration"><svg><use href="#down"/></svg> Faire défiler</a>
+    <a class="view-cta hero-view-cta" data-view-cta href="#demonstration"><span>Découvrir</span><span class="view-cta-accent">l’avant / après <svg><use href="#down"/></svg></span></a>
   </div>
 </section>
 
 <section class="section transform-section" id="demonstration" aria-labelledby="compare-title">
-  <div class="intro split wrap" data-reveal>
+  <div class="intro wrap" data-reveal>
     <div><p class="eyebrow">La transformation</p><h2 id="compare-title" data-words>Une photo.<br> Une nouvelle perspective.</h2></div>
-    <p>Un cadre fixe, puis le lieu prend vie.<span class="motion-invite"> Faites défiler pour découvrir la séquence.</span> <a class="compare-jump" href="#comparateur">Essayez le comparateur</a>.</p>
   </div>
-  <div class="motion-track" aria-hidden="true">
+  <div class="motion-track wrap" aria-hidden="true">
     <div class="motion-stage">
       <div class="motion-blackout"></div><div class="motion-grid"></div>
-      <div class="motion-top wrap"><span><i></i> CINÉLIEU <b>/</b> CHAMP DE VISION</span><span>ÉTUDE N° 01 <b>/</b> INTÉRIEUR</span></div>
-      <div class="motion-callout"><span>Le cadre.</span><span>Le mouvement.</span><span>La projection.</span></div>
+      <div class="motion-top"><span><i></i> DU CADRE AU MOUVEMENT</span><span>01 / 02</span></div>
       <div class="motion-frame">
         <div class="motion-window">
-          <img src="/assets/plan-salon.webp" width="1280" height="720" alt="" loading="lazy">
-          <video class="motion-video" data-src="/assets/plan-salon.mp4" preload="none" muted playsinline></video>
-          <div class="motion-shade"></div><div class="motion-scan"></div>
+          <img src="/assets/salon-verriere.webp" width="1120" height="630" alt="" loading="lazy">
+          <video class="motion-video" data-src="/assets/salon-verriere.mp4" preload="none" muted playsinline></video>
+          <div class="motion-shade"></div>
           <div class="motion-guides"><i></i><i></i><i></i><i></i></div>
           <div class="motion-play"><svg><use href="#play"/></svg></div>
           <div class="motion-expand"><svg><use href="#expand"/></svg></div>
           <div class="motion-cursor"><i></i><svg viewBox="0 0 32 36"><path d="M3 2 28 21l-11 1-5 10z"/></svg></div>
           <span class="motion-record"><i></i> EN MOUVEMENT</span>
         </div>
-        <span class="motion-aside motion-aside-left">FIG. 01<br><b>LE CADRE</b></span><span class="motion-aside motion-aside-right">16:9<br><b>LE PLAN</b></span>
-      </div>
-      <div class="motion-bottom wrap">
-        <div class="motion-steps"><span>01 <b>Cadre fixe</b></span><span>02 <b>Mouvement</b></span><span>03 <b>Projection</b></span></div>
-        <div class="motion-meter"><i></i></div>
       </div>
     </div>
   </div>
-  <div class="compare-block wrap" id="comparateur" data-reveal>
+  <div class="compare-block wrap" id="comparateur">
     <div class="compare-bar">
-      <div><p class="eyebrow">À vous de jouer</p><h3>Le même plan, fixe et en mouvement.</h3></div>
+      <p class="compare-hint" id="compare-hint"><svg><use href="#move"/></svg> Glissez pour comparer</p>
       <div class="compare-select" role="group" aria-label="Choisir un appartement">
-        <button type="button" data-compare="plan-salon" aria-pressed="true" aria-controls="compare-panel">Salon panoramique</button>
-        <button type="button" data-compare="plan-appartement" aria-pressed="false" aria-controls="compare-panel">Appartement lumineux</button>
+        <button type="button" data-compare="salon-verriere" aria-pressed="true" aria-controls="compare-panel">Séjour</button>
+        <button type="button" data-compare="plan-appartement" aria-pressed="false" aria-controls="compare-panel">Appartement</button>
       </div>
     </div>
     <figure class="compare-shell" id="compare-panel">
       <div class="compare" style="--cut:50%">
-        <img class="compare-photo" src="/assets/plan-salon.webp" width="1280" height="720" loading="lazy" alt="Image fixe extraite du plan du salon panoramique">
+        <img class="compare-photo" src="/assets/salon-verriere.webp" width="1120" height="630" loading="lazy" alt="Image fixe extraite du plan du séjour sous verrière" draggable="false">
         <div class="compare-after">
-          <img src="/assets/plan-salon-apres.webp" width="1280" height="720" loading="lazy" alt="">
-          <video id="compare-video" data-src="/assets/plan-salon.mp4" preload="none" muted playsinline loop aria-label="Vidéo du salon panoramique"></video>
+          <img src="/assets/salon-verriere-apres.webp" width="1120" height="630" loading="lazy" alt="" draggable="false">
+          <video id="compare-video" data-src="/assets/salon-verriere.mp4" preload="none" muted playsinline loop aria-label="Vidéo du séjour sous verrière"></video>
         </div>
-        <span class="compare-label before-label">Image fixe</span><span class="compare-label after-label"><i></i> Vidéo</span>
+        <span class="compare-label before-label">Photo</span><span class="compare-label after-label"><i></i> Vidéo</span>
         <span class="compare-line" aria-hidden="true"><span><svg><use href="#move"/></svg></span></span>
-        <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Comparer l’image fixe et la vidéo" aria-valuetext="50 % image fixe, 50 % vidéo">
+        <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Comparer la photo et la vidéo" aria-describedby="compare-hint" aria-valuetext="50 % photo, 50 % vidéo">
       </div>
       <figcaption class="compare-footer">
-        <div><strong id="compare-name">Salon panoramique</strong><span id="compare-description">Image extraite du plan · <a href="https://www.pexels.com/video/amazing-shot-of-living-room-17211925/" target="_blank" rel="noopener noreferrer">Plan filmé : Hamza Awan / Pexels</a></span><span id="compare-status" role="status"></span></div>
-        <div class="compare-controls"><button type="button" class="btn compare-play" aria-controls="compare-video" aria-pressed="false"><svg><use href="#play"/></svg><span>Lancer la vidéo</span></button><button type="button" class="icon-btn compare-expand" data-film="plan-salon" aria-label="Agrandir la démonstration"><svg><use href="#expand"/></svg></button></div>
+        <div><span id="compare-description">Plan d’illustration · <a href="https://www.pexels.com/video/beautiful-living-area-interiors-5091093/" target="_blank" rel="noopener noreferrer" aria-label="Crédit du plan : ArtHouse Studio sur Pexels">Crédit</a></span><span id="compare-status" role="status"></span></div>
+        <div class="compare-controls"><button type="button" class="icon-btn compare-play" aria-controls="compare-video" aria-pressed="false" aria-label="Lire la vidéo"><svg><use href="#play"/></svg></button><button type="button" class="icon-btn compare-expand" data-film="salon-verriere" aria-label="Agrandir la vidéo"><svg><use href="#expand"/></svg></button></div>
       </figcaption>
     </figure>
-    <p class="compare-disclosure">Les plans filmés illustrent l’effet du mouvement. Pour vos biens, nous travaillons à partir de vos photos.</p>
   </div>
 </section>
 
@@ -251,7 +241,7 @@
       <div class="honeypot" aria-hidden="true"><label>Site internet<input name="website" tabindex="-1" autocomplete="off" maxlength="200"></label></div>
       <label class="consent"><input type="checkbox" name="consentement" value="oui" required><span>J’accepte que les données saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite.html">Politique de confidentialité</a></span></label>
       <div id="antispam" hidden></div>
-      <button class="btn btn-mint" type="submit">Demander mon devis <svg><use href="#arrow"/></svg></button>
+      <button class="view-cta contact-view-cta" data-view-cta type="submit"><span>Demander</span><span class="view-cta-accent">mon devis <svg><use href="#arrow"/></svg></span></button>
       <p id="form-mode" class="form-help">Le bouton prépare votre demande dans votre application de messagerie.</p>
       <p id="form-status" class="form-status" role="status"></p>
       <noscript><p class="form-help">Pour envoyer votre demande, utilisez le lien e-mail.</p></noscript>
