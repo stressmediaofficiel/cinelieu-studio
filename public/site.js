@@ -28,12 +28,8 @@ let tick=0;
 const progress=$('.progress'),method=$('.method-flow');
 const steps=$$('.method-step',method),stepLinks=$$('.method-index',method);
 let stepLayout=[],currentStep=0;
-function moveMethodCursor(line){
- const first=stepLayout[0],last=stepLayout.at(-1);
- const step=stepLayout[currentStep];
- const progress=clamp((line-first.center)/Math.max(1,last.center-first.center),0,1);
- method.style.setProperty('--method-cursor',(reduced.matches?step.center:first.center+progress*(last.center-first.center))+'px');
- method.style.setProperty('--method-progress',progress);
+function moveMethodCursor(){
+ method.style.setProperty('--method-cursor',stepLayout[currentStep].center+'px');
 }
 function measureMethod(){
  const top=method.getBoundingClientRect().top;
@@ -43,6 +39,7 @@ function measureMethod(){
  });
  method.style.setProperty('--method-start',stepLayout[0].center+'px');
  method.style.setProperty('--method-length',stepLayout.at(-1).center-stepLayout[0].center+'px');
+ moveMethodCursor();
  queue();
 }
 function selectMethodStep(index){
@@ -52,6 +49,7 @@ function selectMethodStep(index){
  currentStep=index;
  steps[index].classList.add('is-current');
  stepLinks[index].setAttribute('aria-current','step');
+ moveMethodCursor();
 }
 function scrollEffects(){
  tick=0;
@@ -66,7 +64,6 @@ function scrollEffects(){
  let next=0;
  for(let i=1;i<stepLayout.length;i++)if(line>=stepLayout[i].start)next=i;
  selectMethodStep(next);
- moveMethodCursor(line);
 }
 function queue(){if(!tick)tick=requestAnimationFrame(scrollEffects)}
 addEventListener('scroll',queue,{passive:true});addEventListener('resize',measureMethod,{passive:true});
