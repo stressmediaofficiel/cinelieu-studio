@@ -265,7 +265,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
  min-height:clamp(149px,18vw,220px);
  background:radial-gradient(ellipse at 50% 60%,#f2faf3,#f7f8f7 74%);color:#19201b
 }
-.journey-drawing{
+.journey-art > .journey-drawing{
  display:block;width:clamp(155px,18vw,233px);height:auto;overflow:visible;
  stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round
 }
@@ -361,7 +361,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 @media(max-width:740px){
  .journey{grid-template-columns:1fr;max-width:420px;margin-inline:auto;gap:13px}
  .journey-art{min-height:clamp(133px,42vw,172px)}
- .journey-drawing{width:clamp(150px,45vw,211px)}
+ .journey-art > .journey-drawing{width:clamp(150px,45vw,211px)}
  .footer .footer-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 10px;padding-block:16px}
  .footer .footer-main>p{grid-column:1/-1;grid-row:2}
  .footer .footer-bottom{padding-block:10px}
