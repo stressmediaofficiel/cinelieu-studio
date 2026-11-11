@@ -1,4 +1,4 @@
-const recipient='marcbrioche.agence@gmail.com';
+const recipient='cinelieupro@gmail.com';
 const choices={aperçu:'Aperçu de mon bien',unité:'Vidéo à l’unité',pack:'Pack professionnel','sur-mesure':'Accompagnement sur mesure',autre:'Autre demande'};
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const failure=(error,status=400)=>response({ok:false,error},status);
@@ -39,4 +39,15 @@ export async function contact(request,env,requestFetch=fetch){
   return response({ok:true});
  }catch{return failure('Le service de messagerie est momentanément indisponible.',502)}
 }
-export default {fetch(request,env){return new URL(request.url).pathname==='/api/contact'?contact(request,env):env.ASSETS.fetch(request)}};
+export default {
+ fetch(request,env){
+  const url=new URL(request.url);
+  if(url.hostname==='cinelieu-studio.pages.dev'){
+   url.protocol='https:';
+   url.host='cinelieu.com';
+   url.port='';
+   return Response.redirect(url,301);
+  }
+  return url.pathname==='/api/contact'?contact(request,env):env.ASSETS.fetch(request);
+ }
+};
