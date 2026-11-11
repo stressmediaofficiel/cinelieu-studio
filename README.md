@@ -23,4 +23,6 @@ Pour activer l’envoi direct, renseigner dans Cloudflare les secrets `RESEND_AP
 
 Le logo et les images optimisées sont dans `public/assets/`. Les quatre MP4 illustratifs sont des mouvements de caméra numériques sur des visuels créés pour le studio. Les remplacer sous les mêmes noms ou modifier le registre `films` dans `public/site.js` en ajustant les formats. Garder l’étiquette « Démonstration » tant que ces clips illustrent le procédé.
 
+Les deux comparatifs utilisent des plans filmés d’illustration sous [licence Pexels](https://www.pexels.com/license/) : [Salon panoramique, Hamza Awan](https://www.pexels.com/video/amazing-shot-of-living-room-17211925/) et [Appartement lumineux, Fernanda Neitzel](https://www.pexels.com/video/modern-living-room-with-elegant-interior-design-36030658/). Les fichiers `plan-*.webp` sont extraits des MP4 livrés ; les fichiers `*-apres.webp` montrent une image plus tard dans le même plan. Ces vidéos ne sont pas des réalisations client ni des animations générées à partir d’une photo.
+
 Les coordonnées juridiques, les durées de conservation et les modalités commerciales restent à valider avec l’exploitant avant d’utiliser le site pour la prospection.

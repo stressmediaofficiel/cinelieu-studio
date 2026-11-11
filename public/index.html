@@ -92,27 +92,61 @@
   </div>
 </section>
 
-<section class="section wrap" id="demonstration" aria-labelledby="compare-title">
-  <div class="intro split" data-reveal>
+<section class="section transform-section" id="demonstration" aria-labelledby="compare-title">
+  <div class="intro split wrap" data-reveal>
     <div><p class="eyebrow">La transformation</p><h2 id="compare-title" data-words>Une photo.<br> Une nouvelle perspective.</h2></div>
-    <p>La lumière, les volumes, les détails. Faites glisser le curseur pour voir comment un mouvement de caméra numérique change la lecture d’une même image.</p>
+    <p>Un cadre fixe, puis le lieu prend vie.<span class="motion-invite"> Faites défiler pour découvrir la séquence.</span> <a class="compare-jump" href="#comparateur">Essayez le comparateur</a>.</p>
   </div>
-  <figure class="compare-shell" data-reveal>
-    <div class="compare" style="--cut:50%">
-      <img class="compare-photo" src="/assets/villa.webp" width="1440" height="810" loading="lazy" alt="Photo de départ de la villa">
-      <div class="compare-after">
-        <img src="/assets/villa.webp" width="1440" height="810" loading="lazy" alt="">
-        <video id="compare-video" data-src="/assets/villa.mp4" preload="none" muted playsinline loop aria-label="Animation numérique de la photo de villa"></video>
+  <div class="motion-track" aria-hidden="true">
+    <div class="motion-stage">
+      <div class="motion-blackout"></div><div class="motion-grid"></div>
+      <div class="motion-top wrap"><span><i></i> CINÉLIEU <b>/</b> CHAMP DE VISION</span><span>ÉTUDE N° 01 <b>/</b> INTÉRIEUR</span></div>
+      <div class="motion-callout"><span>Le cadre.</span><span>Le mouvement.</span><span>La projection.</span></div>
+      <div class="motion-frame">
+        <div class="motion-window">
+          <img src="/assets/plan-salon.webp" width="1280" height="720" alt="" loading="lazy">
+          <video class="motion-video" data-src="/assets/plan-salon.mp4" preload="none" muted playsinline></video>
+          <div class="motion-shade"></div><div class="motion-scan"></div>
+          <div class="motion-guides"><i></i><i></i><i></i><i></i></div>
+          <div class="motion-play"><svg><use href="#play"/></svg></div>
+          <div class="motion-expand"><svg><use href="#expand"/></svg></div>
+          <div class="motion-cursor"><i></i><svg viewBox="0 0 32 36"><path d="M3 2 28 21l-11 1-5 10z"/></svg></div>
+          <span class="motion-record"><i></i> EN MOUVEMENT</span>
+        </div>
+        <span class="motion-aside motion-aside-left">FIG. 01<br><b>LE CADRE</b></span><span class="motion-aside motion-aside-right">16:9<br><b>LE PLAN</b></span>
       </div>
-      <span class="compare-label before-label">Photo</span><span class="compare-label after-label"><i></i> Animation</span>
-      <span class="compare-line" aria-hidden="true"><span><svg><use href="#move"/></svg></span></span>
-      <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Comparer la photo et l’animation">
+      <div class="motion-bottom wrap">
+        <div class="motion-steps"><span>01 <b>Cadre fixe</b></span><span>02 <b>Mouvement</b></span><span>03 <b>Projection</b></span></div>
+        <div class="motion-meter"><i></i></div>
+      </div>
     </div>
-    <figcaption class="compare-footer">
-      <div><strong>Villa provençale</strong><span>Démonstration illustrative · Mouvement numérique</span></div>
-      <div class="compare-controls"><button type="button" class="btn compare-play" aria-controls="compare-video" aria-pressed="false"><svg><use href="#play"/></svg><span>Lancer la vidéo</span></button><button type="button" class="icon-btn" data-film="villa" aria-label="Agrandir la démonstration"><svg><use href="#expand"/></svg></button></div>
-    </figcaption>
-  </figure>
+  </div>
+  <div class="compare-block wrap" id="comparateur" data-reveal>
+    <div class="compare-bar">
+      <div><p class="eyebrow">À vous de jouer</p><h3>Le même plan, fixe et en mouvement.</h3></div>
+      <div class="compare-select" role="group" aria-label="Choisir un appartement">
+        <button type="button" data-compare="plan-salon" aria-pressed="true" aria-controls="compare-panel">Salon panoramique</button>
+        <button type="button" data-compare="plan-appartement" aria-pressed="false" aria-controls="compare-panel">Appartement lumineux</button>
+      </div>
+    </div>
+    <figure class="compare-shell" id="compare-panel">
+      <div class="compare" style="--cut:50%">
+        <img class="compare-photo" src="/assets/plan-salon.webp" width="1280" height="720" loading="lazy" alt="Image fixe extraite du plan du salon panoramique">
+        <div class="compare-after">
+          <img src="/assets/plan-salon-apres.webp" width="1280" height="720" loading="lazy" alt="">
+          <video id="compare-video" data-src="/assets/plan-salon.mp4" preload="none" muted playsinline loop aria-label="Vidéo du salon panoramique"></video>
+        </div>
+        <span class="compare-label before-label">Image fixe</span><span class="compare-label after-label"><i></i> Vidéo</span>
+        <span class="compare-line" aria-hidden="true"><span><svg><use href="#move"/></svg></span></span>
+        <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Comparer l’image fixe et la vidéo" aria-valuetext="50 % image fixe, 50 % vidéo">
+      </div>
+      <figcaption class="compare-footer">
+        <div><strong id="compare-name">Salon panoramique</strong><span id="compare-description">Image extraite du plan · <a href="https://www.pexels.com/video/amazing-shot-of-living-room-17211925/" target="_blank" rel="noopener noreferrer">Plan filmé : Hamza Awan / Pexels</a></span><span id="compare-status" role="status"></span></div>
+        <div class="compare-controls"><button type="button" class="btn compare-play" aria-controls="compare-video" aria-pressed="false"><svg><use href="#play"/></svg><span>Lancer la vidéo</span></button><button type="button" class="icon-btn compare-expand" data-film="plan-salon" aria-label="Agrandir la démonstration"><svg><use href="#expand"/></svg></button></div>
+      </figcaption>
+    </figure>
+    <p class="compare-disclosure">Les plans filmés illustrent l’effet du mouvement. Pour vos biens, nous travaillons à partir de vos photos.</p>
+  </div>
 </section>
 
 <section class="section audience" id="publics" aria-labelledby="audience-title">
@@ -234,7 +268,7 @@
 <dialog id="film-dialog" class="film-dialog" aria-labelledby="film-title">
   <div class="dialog-head"><div><p>Démonstration illustrative</p><h2 id="film-title">Vidéo</h2></div><button type="button" class="icon-btn dialog-close" aria-label="Fermer la vidéo" autofocus><svg><use href="#close"/></svg></button></div>
   <video id="film-player" controls playsinline muted preload="none" aria-labelledby="film-title"></video>
-  <div class="dialog-foot"><span>Animation numérique · Vidéo sans audio</span><button type="button" class="icon-btn" id="native-fullscreen" aria-label="Afficher la vidéo en plein écran"><svg><use href="#expand"/></svg></button></div>
+  <div class="dialog-foot"><span id="film-kind">Animation numérique · Vidéo sans audio</span><button type="button" class="icon-btn" id="native-fullscreen" aria-label="Afficher la vidéo en plein écran"><svg><use href="#expand"/></svg></button></div>
   <p id="player-status" class="player-status" role="status"></p>
 </dialog>
 </body>
