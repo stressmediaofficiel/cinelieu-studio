@@ -1,0 +1,4 @@
+{
+ "name":"cinelieu-studio","version":"1.0.0","private":true,"type":"module",
+ "scripts":{"build":"node scripts/build.mjs","dev":"node scripts/dev.mjs","test":"node --test scripts/contact.test.mjs"}
+}

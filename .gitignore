@@ -1,0 +1,6 @@
+dist/
+.openai/
+node_modules/
+*.png
+.env*
+.dev.vars*
