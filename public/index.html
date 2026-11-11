@@ -65,7 +65,7 @@
     <h1 id="hero-title">Vos biens méritent mieux<br class="hero-br"> <em>qu’un simple diaporama.</em></h1>
     <p class="hero-copy">Nous transformons vos photos immobilières en vidéos cinématiques, prêtes à captiver vos futurs clients. <span>Sans tournage, sans déplacement.</span></p>
     <div class="hero-actions">
-      <a class="view-cta hero-view-cta" data-view-cta href="#contact" data-need="aperçu"><span>Parlons de</span><span class="view-cta-accent">votre projet <svg aria-hidden="true"><use href="#up-right"/></svg></span></a>
+      <a class="view-cta hero-view-cta" data-view-cta href="#contact" data-need="aperçu" aria-label="Parlons de votre projet"><span>Parlons de</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">votre projet <svg aria-hidden="true"><use href="#up-right"/></svg></span></span></span></a>
     </div>
     <figure class="flow-frame hero-frame" data-film-frame>
       <img src="/assets/flow-accueil.webp" width="1280" height="720" alt="Séjour lumineux et baies vitrées ouvertes sur la végétation" fetchpriority="high">
@@ -92,7 +92,7 @@
         <label>Hausse envisagée (points)<input id="estimate-increase" type="number" value="0.5" min="0" max="100" step="any" inputmode="decimal" aria-describedby="estimate-note"></label>
       </div>
       <div class="conversion-results">
-        <div class="conversion-highlight"><span id="estimate-gain" aria-hidden="true">+5</span><p>demandes de contact en plus par mois</p></div>
+        <div class="conversion-highlight"><span id="estimate-gain">+5</span><p>demandes de contact en plus par mois</p></div>
         <dl class="conversion-compare"><div><dt>Aujourd’hui</dt><dd id="estimate-before">20</dd></div><div><dt>Dans ce scénario</dt><dd id="estimate-after">25</dd></div></dl>
       </div>
       <p id="estimate-note" class="estimate-note">Un point fait passer, par exemple, de 2 % à 3 %. Cette simulation est une hypothèse, sans résultat garanti.</p>
@@ -114,7 +114,7 @@
 
 <section class="section wrap" id="prestations" aria-labelledby="services-title">
   <div class="intro split" data-reveal><div><p class="eyebrow">Nos prestations</p><h2 id="services-title" data-words>Le bon format,<br> au bon endroit.</h2></div><p>Un montage pensé pour le bien, votre identité et les supports sur lesquels vous souhaitez le présenter.</p></div>
-  <div class="bento">
+  <div class="bento" data-service-sequence>
     <article class="service service-feature" data-reveal>
       <div class="service-copy"><span class="service-icon"><svg><use href="#film"/></svg></span><h3>Animation de photos immobilières</h3><p>Travellings numériques, recadrages et transitions donnent du relief à vos images existantes.</p></div>
       <div class="service-film" aria-hidden="true"><img src="/assets/flow-accueil.webp" width="1280" height="720" loading="lazy" alt=""><div class="frame-corners"></div></div>
@@ -129,11 +129,14 @@
 <section class="process section" id="methode" aria-labelledby="process-title">
   <div class="wrap process-layout">
     <div class="intro" data-reveal><p class="eyebrow">Comment ça marche ?</p><h2 id="process-title" data-words>De vos photos<br> à votre vidéo.</h2><p>Un processus à distance, avec des échanges directs à chaque étape.</p><a href="#contact" class="text-link" data-need="unité">Présenter mon bien <svg><use href="#arrow"/></svg></a></div>
-    <ol class="timeline">
-      <li data-reveal><span aria-hidden="true">01</span><div><h3>Vous partagez vos photos</h3><p>Vous nous envoyez les photographies que vous êtes autorisé à utiliser et les éléments à intégrer au montage.</p></div></li>
-      <li data-reveal><span aria-hidden="true">02</span><div><h3>Nous donnons vie à votre bien</h3><p>Nous créons les mouvements de caméra numériques, les transitions, le montage et l’habillage. La validation et les retouches sont précisées dans le devis.</p></div></li>
-      <li data-reveal><span aria-hidden="true">03</span><div><h3>Vous recevez votre vidéo</h3><p>Nous livrons votre fichier vidéo dans le format adapté aux supports convenus ensemble.</p></div></li>
-    </ol>
+    <div class="method-flow">
+      <div class="method-rail" aria-hidden="true"><i class="method-fill"></i><i class="method-thumb"></i></div>
+      <ol class="timeline">
+        <li class="method-step is-current" id="etape-1"><a class="method-index" href="#etape-1" aria-label="Étape 1 : partager vos photos" aria-current="step">01</a><div class="method-copy"><h3>Vous partagez vos photos</h3><p>Vous nous envoyez les photographies que vous êtes autorisé à utiliser et les éléments à intégrer au montage.</p></div></li>
+        <li class="method-step" id="etape-2"><a class="method-index" href="#etape-2" aria-label="Étape 2 : donner vie à votre bien">02</a><div class="method-copy"><h3>Nous donnons vie à votre bien</h3><p>Nous créons les mouvements de caméra numériques, les transitions, le montage et l’habillage. La validation et les retouches sont précisées dans le devis.</p></div></li>
+        <li class="method-step" id="etape-3"><a class="method-index" href="#etape-3" aria-label="Étape 3 : recevoir votre vidéo">03</a><div class="method-copy"><h3>Vous recevez votre vidéo</h3><p>Nous livrons votre fichier vidéo dans le format adapté aux supports convenus ensemble.</p></div></li>
+      </ol>
+    </div>
   </div>
 </section>
 
@@ -200,7 +203,7 @@
       <div class="honeypot" aria-hidden="true"><label>Site internet<input name="website" tabindex="-1" autocomplete="off" maxlength="200"></label></div>
       <label class="consent"><input type="checkbox" name="consentement" value="oui" required><span>J’accepte que les données saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite.html">Politique de confidentialité</a></span></label>
       <div id="antispam" hidden></div>
-      <button class="view-cta contact-view-cta" data-view-cta type="submit"><span>Demander</span><span class="view-cta-accent">mon devis <svg><use href="#arrow"/></svg></span></button>
+      <button class="view-cta contact-view-cta" data-view-cta type="submit" aria-label="Demander mon devis"><span>Demander</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">mon devis <svg aria-hidden="true"><use href="#arrow"/></svg></span></span></span></button>
       <p id="form-mode" class="form-help">Le bouton prépare votre demande dans votre application de messagerie.</p>
       <p id="form-status" class="form-status" role="status"></p>
       <noscript><p class="form-help">Pour envoyer votre demande, utilisez le lien e-mail.</p></noscript>

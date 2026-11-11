@@ -1,5 +1,5 @@
 const $=(s,root=document)=>root.querySelector(s), $$=(s,root=document)=>[...root.querySelectorAll(s)];
-const reduced=matchMedia('(prefers-reduced-motion: reduce)'), mouse=matchMedia('(hover:hover) and (pointer:fine)');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const nav=$('.nav-links'),toggle=$('.menu-toggle');
 function menu(open){nav.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fermer le menu':'Ouvrir le menu');$('use',toggle).setAttribute('href',open?'#close':'#menu')}
 toggle.addEventListener('click',()=>menu(!nav.classList.contains('open')));
@@ -25,16 +25,87 @@ if('IntersectionObserver'in window){
 }
 const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
 let tick=0;
-const progress=$('.progress'),timeline=$('.timeline');
+const progress=$('.progress'),method=$('.method-flow');
+const steps=$$('.method-step',method),stepLinks=$$('.method-index',method);
+let stepLayout=[],currentStep=0;
+function moveMethodCursor(){
+ const first=stepLayout[0].center,last=stepLayout.at(-1).center;
+ const distance=stepLayout[currentStep].center-first;
+ method.style.setProperty('--method-cursor',first+distance+'px');
+ method.style.setProperty('--method-progress',distance/Math.max(1,last-first));
+}
+function measureMethod(){
+ const top=method.getBoundingClientRect().top;
+ stepLayout=steps.map((step,i)=>{
+  const box=step.getBoundingClientRect(),link=stepLinks[i].getBoundingClientRect();
+  return {start:box.top-top+Math.min(box.height*.2,27),center:link.top-top+link.height/2};
+ });
+ method.style.setProperty('--method-start',stepLayout[0].center+'px');
+ method.style.setProperty('--method-length',stepLayout.at(-1).center-stepLayout[0].center+'px');
+ moveMethodCursor();queue();
+}
+function selectMethodStep(index){
+ if(index===currentStep)return;
+ steps[currentStep].classList.remove('is-current');
+ stepLinks[currentStep].removeAttribute('aria-current');
+ currentStep=index;
+ steps[index].classList.add('is-current');
+ stepLinks[index].setAttribute('aria-current','step');
+ moveMethodCursor();
+}
 function scrollEffects(){
  tick=0;
- const doc=document.documentElement,ratio=clamp(scrollY/Math.max(1,doc.scrollHeight-innerHeight),0,1);
- const rect=reduced.matches?null:timeline.getBoundingClientRect();
+ const height=innerHeight,doc=document.documentElement,ratio=clamp(scrollY/Math.max(1,doc.scrollHeight-height),0,1);
+ const rect=method.getBoundingClientRect();
  progress.style.transform='scaleX('+ratio+')';
- if(rect)timeline.style.setProperty('--timeline',clamp((innerHeight*.76-rect.top)/Math.max(1,rect.height),0,1));
+ if(rect.top>=height||rect.bottom<=0)return;
+ const line=height*.55-rect.top;
+ let next=0;
+ for(let i=1;i<stepLayout.length;i++)if(line>=stepLayout[i].start+(i<=currentStep?-6:6))next=i;
+ selectMethodStep(next);
 }
 function queue(){if(!tick)tick=requestAnimationFrame(scrollEffects)}
-addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue,{passive:true});queue();
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',measureMethod,{passive:true});
+if('ResizeObserver'in window){const sizes=new ResizeObserver(measureMethod);steps.forEach(step=>sizes.observe(step));}
+measureMethod();
+
+const serviceCards=$$('[data-service-sequence] .service'),serviceVisible=new Set(),serviceVisited=new Set();
+let currentService=null,serviceTimer=0;
+function illuminateService(card){
+ if(card===currentService)return;
+ currentService?.classList.remove('is-lit');
+ currentService=card;
+ if(card){card.classList.add('is-lit');serviceVisited.add(card)}
+}
+function queueServices(){
+ if(reduced.matches||document.hidden||!serviceVisible.size){
+  clearTimeout(serviceTimer);serviceTimer=0;illuminateService(null);serviceVisited.clear();return;
+ }
+ if(!serviceVisible.has(currentService)){
+  clearTimeout(serviceTimer);serviceTimer=0;
+  illuminateService(serviceCards.find(card=>serviceVisible.has(card)&&!serviceVisited.has(card))||serviceCards.find(card=>serviceVisible.has(card)));
+ }
+ if(!serviceTimer&&serviceCards.some(card=>serviceVisible.has(card)&&!serviceVisited.has(card))){
+  serviceTimer=setTimeout(()=>{
+   serviceTimer=0;
+   const next=serviceCards.find(card=>serviceVisible.has(card)&&!serviceVisited.has(card));
+   if(next)illuminateService(next);
+   queueServices();
+  },780);
+ }
+}
+if('IntersectionObserver'in window){
+ const cards=new IntersectionObserver(entries=>{
+  for(const {target,intersectionRatio} of entries){
+   if(intersectionRatio>=.46)serviceVisible.add(target);
+   else if(intersectionRatio<=.2)serviceVisible.delete(target);
+  }
+  queueServices();
+ },{threshold:[.2,.46],rootMargin:'-8% 0px -10%'});
+ serviceCards.forEach(card=>cards.observe(card));
+}
+reduced.addEventListener('change',queueServices);
+document.addEventListener('visibilitychange',queueServices);
 
 const mediaFrames=new Map($$('[data-film-frame]').map(frame=>{
  const video=$('[data-flow-video]',frame),state={video,visible:false,active:false};
@@ -74,6 +145,7 @@ reduced.addEventListener('change',syncVideos);
 
 const visits=$('#estimate-visits'),rate=$('#estimate-rate'),increase=$('#estimate-increase');
 const gain=$('#estimate-gain'),before=$('#estimate-before'),after=$('#estimate-after'),announcement=$('#estimate-announcement');
+const results=$('.conversion-results');
 const number=new Intl.NumberFormat('fr-FR');
 function estimate(traffic,current,lift){
  const base=Math.round(traffic*current/100);
@@ -83,16 +155,42 @@ function estimate(traffic,current,lift){
 function estimateValues(){
  return estimate(...[visits,rate,increase].map(field=>clamp(field.valueAsNumber||0,0,Number(field.max))));
 }
-let estimateAnimation=0;
+let estimateAnimation=0,estimateTimer=0,estimateVisible=false,displayed=estimateValues();
 function paintEstimate(values){
+ displayed=values;
  const [base,total,extra]=values;
- before.textContent=number.format(base);after.textContent=number.format(total);
- gain.textContent=(extra>0?'+':'')+number.format(extra);
+ for(const [node,value] of [[before,number.format(base)],[after,number.format(total)],[gain,(extra>0?'+':'')+number.format(extra)]]){
+  if(node.textContent!==value)node.textContent=value;
+ }
+}
+function stopEstimate(){
+ cancelAnimationFrame(estimateAnimation);clearTimeout(estimateTimer);
+ delete results.dataset.countFocus;
+}
+function animateEstimate(from,to,entrance){
+ stopEstimate();
+ if(reduced.matches||!estimateVisible){paintEstimate(to);return}
+ let last=performance.now(),elapsed=0;
+ const duration=entrance?570:390,delays=entrance?[0,180,380]:[0,60,120];
+ paintEstimate(from);
+ function count(time){
+  elapsed+=clamp(time-last,0,48);last=time;
+  const phase=elapsed>=delays[2]?3:elapsed>=delays[1]?2:1;
+  if(results.dataset.countFocus!==String(phase))results.dataset.countFocus=phase;
+  paintEstimate(to.map((value,i)=>{
+   const t=clamp((elapsed-delays[i])/duration,0,1);
+   return Math.round(from[i]+(value-from[i])*(1-(1-t)**3));
+  }));
+  if(elapsed<duration+delays[2])estimateAnimation=requestAnimationFrame(count);
+  else delete results.dataset.countFocus;
+ }
+ estimateAnimation=requestAnimationFrame(count);
 }
 function updateEstimate(){
- cancelAnimationFrame(estimateAnimation);
+ stopEstimate();
  const values=estimateValues();
- paintEstimate(values);
+ if(reduced.matches||!estimateVisible)paintEstimate(values);
+ else estimateTimer=setTimeout(()=>animateEstimate(displayed,values,false),150);
  const [base,total,extra]=values;
  announcement.textContent=number.format(base)+' demandes aujourd’hui, '+number.format(total)+' dans ce scénario. '+number.format(extra)+' de plus par mois.';
 }
@@ -105,22 +203,17 @@ for(const field of [visits,rate,increase]){
   }
  });
 }
-if('IntersectionObserver'in window&&!reduced.matches){
+if('IntersectionObserver'in window){
  const counts=new IntersectionObserver(([entry])=>{
-  if(!entry.isIntersecting)return;
-  counts.disconnect();
-  if(reduced.matches)return;
-  const values=estimateValues(),start=performance.now();
-  function count(time){
-   if(reduced.matches){paintEstimate(values);return}
-   const t=clamp((time-start)/680,0,1),eased=1-(1-t)**3;
-   paintEstimate(values.map(value=>Math.round(value*eased)));
-   if(t<1)estimateAnimation=requestAnimationFrame(count);
+  if(entry.intersectionRatio>=.48&&!estimateVisible){
+   estimateVisible=true;animateEstimate([0,0,0],estimateValues(),true);
+  }else if(entry.intersectionRatio<=.14&&estimateVisible){
+   estimateVisible=false;stopEstimate();paintEstimate(estimateValues());
   }
-  estimateAnimation=requestAnimationFrame(count);
- },{threshold:.35});
- counts.observe($('.conversion-results'));
+ },{threshold:[.14,.48]});
+ counts.observe(results);
 }
+reduced.addEventListener('change',()=>{stopEstimate();paintEstimate(estimateValues())});
 
 const form=$('#devis'),status=$('#form-status'),formMode=$('#form-mode'),submit=$('button[type=submit]',form);
 $$('[data-need]').forEach(a=>a.addEventListener('click',()=>{form.elements.besoin.value=a.dataset.need}));
