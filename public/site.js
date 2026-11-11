@@ -28,21 +28,22 @@ let tick=0;
 const progress=$('.progress'),method=$('.method-flow');
 const steps=$$('.method-step',method),stepLinks=$$('.method-index',method);
 let stepLayout=[],currentStep=0;
-function moveMethodCursor(){
- const first=stepLayout[0].center,last=stepLayout.at(-1).center;
- const distance=stepLayout[currentStep].center-first;
- method.style.setProperty('--method-cursor',first+distance+'px');
- method.style.setProperty('--method-progress',distance/Math.max(1,last-first));
+function moveMethodCursor(line){
+ const first=stepLayout[0],last=stepLayout.at(-1);
+ const step=stepLayout[currentStep];
+ const progress=clamp((line-first.center)/Math.max(1,last.center-first.center),0,1);
+ method.style.setProperty('--method-cursor',(reduced.matches?step.center:first.center+progress*(last.center-first.center))+'px');
+ method.style.setProperty('--method-progress',progress);
 }
 function measureMethod(){
  const top=method.getBoundingClientRect().top;
  stepLayout=steps.map((step,i)=>{
   const box=step.getBoundingClientRect(),link=stepLinks[i].getBoundingClientRect();
-  return {start:box.top-top+Math.min(box.height*.2,27),center:link.top-top+link.height/2};
+  return {start:box.top-top,center:link.top-top+link.height/2};
  });
  method.style.setProperty('--method-start',stepLayout[0].center+'px');
  method.style.setProperty('--method-length',stepLayout.at(-1).center-stepLayout[0].center+'px');
- moveMethodCursor();queue();
+ queue();
 }
 function selectMethodStep(index){
  if(index===currentStep)return;
@@ -51,7 +52,6 @@ function selectMethodStep(index){
  currentStep=index;
  steps[index].classList.add('is-current');
  stepLinks[index].setAttribute('aria-current','step');
- moveMethodCursor();
 }
 function scrollEffects(){
  tick=0;
@@ -60,54 +60,40 @@ function scrollEffects(){
  const layer=readGalleryLayer(height);
  progress.style.transform='scaleX('+ratio+')';
  showGalleryLayer(layer);
+ highlightService(height);
  if(rect.top>=height||rect.bottom<=0)return;
- const line=height*.55-rect.top;
+ const line=height*.57-rect.top;
  let next=0;
- for(let i=1;i<stepLayout.length;i++)if(line>=stepLayout[i].start+(i<=currentStep?-6:6))next=i;
+ for(let i=1;i<stepLayout.length;i++)if(line>=stepLayout[i].start)next=i;
  selectMethodStep(next);
+ moveMethodCursor(line);
 }
 function queue(){if(!tick)tick=requestAnimationFrame(scrollEffects)}
 addEventListener('scroll',queue,{passive:true});addEventListener('resize',measureMethod,{passive:true});
 if('ResizeObserver'in window){const sizes=new ResizeObserver(measureMethod);steps.forEach(step=>sizes.observe(step));}
 measureMethod();
 
-const serviceCards=$$('[data-service-sequence] .service'),serviceVisible=new Set(),serviceVisited=new Set();
-let currentService=null,serviceTimer=0;
-function illuminateService(card){
- if(card===currentService)return;
- currentService?.classList.remove('is-lit');
- currentService=card;
- if(card){card.classList.add('is-lit');serviceVisited.add(card)}
-}
-function queueServices(){
- if(reduced.matches||document.hidden||!serviceVisible.size){
-  clearTimeout(serviceTimer);serviceTimer=0;illuminateService(null);serviceVisited.clear();return;
- }
- if(!serviceVisible.has(currentService)){
-  clearTimeout(serviceTimer);serviceTimer=0;
-  illuminateService(serviceCards.find(card=>serviceVisible.has(card)&&!serviceVisited.has(card))||serviceCards.find(card=>serviceVisible.has(card)));
- }
- if(!serviceTimer&&serviceCards.some(card=>serviceVisible.has(card)&&!serviceVisited.has(card))){
-  serviceTimer=setTimeout(()=>{
-   serviceTimer=0;
-   const next=serviceCards.find(card=>serviceVisible.has(card)&&!serviceVisited.has(card));
-   if(next)illuminateService(next);
-   queueServices();
-  },780);
- }
-}
-if('IntersectionObserver'in window){
- const cards=new IntersectionObserver(entries=>{
-  for(const {target,intersectionRatio} of entries){
-   if(intersectionRatio>=.46)serviceVisible.add(target);
-   else if(intersectionRatio<=.2)serviceVisible.delete(target);
+const services=$('[data-service-sequence]'),serviceCards=$$('.service',services);
+let currentService=null;
+function highlightService(height){
+ const section=services.getBoundingClientRect();
+ const line=height*.6;
+ let next=null;
+ if(!reduced.matches&&section.top<line&&section.bottom>line){
+  let rowTop=-Infinity,rowOffset=0;
+  for(const card of serviceCards){
+   const box=card.getBoundingClientRect();
+   if(box.top>rowTop+4){rowTop=box.top;rowOffset=0}
+   if(line>=rowTop+rowOffset)next=card;
+   rowOffset+=Math.min(58,box.height*.23);
   }
-  queueServices();
- },{threshold:[.2,.46],rootMargin:'-8% 0px -10%'});
- serviceCards.forEach(card=>cards.observe(card));
+ }
+ if(next===currentService)return;
+ currentService?.classList.remove('is-lit');
+ next?.classList.add('is-lit');
+ currentService=next;
 }
-reduced.addEventListener('change',queueServices);
-document.addEventListener('visibilitychange',queueServices);
+reduced.addEventListener('change',queue);
 
 const gallery=$('[data-gallery-stack]'),galleryMarks=$$('.stack-mark',gallery),galleryCards=$$('.stack-card',gallery);
 let galleryLayer=-1,mediaPaused=false;
@@ -179,37 +165,26 @@ if('IntersectionObserver'in window){
 document.addEventListener('visibilitychange',syncVideos);
 reduced.addEventListener('change',()=>{refreshMediaToggles();syncVideos()});
 
-const scenarioStats=$('[data-scenario-stats]');
-const scenarioValues=$$('[data-scenario-value]',scenarioStats).map(node=>({
- node, label:node.textContent, target:parseInt(node.textContent,10)
-}));
-let scenarioFrame=0;
-function finishScenario(){
- cancelAnimationFrame(scenarioFrame);
- delete scenarioStats.dataset.countFocus;
- for(const {node,label} of scenarioValues)node.textContent=label;
-}
 if('IntersectionObserver'in window&&!reduced.matches){
- const observer=new IntersectionObserver(([entry])=>{
-  if(!entry.isIntersecting)return;
-  observer.disconnect();
-  if(reduced.matches)return;
-  const start=performance.now(),duration=550,delay=180;
-  function count(time){
-   const elapsed=time-start;
-   scenarioStats.dataset.countFocus=Math.min(3,1+Math.floor(elapsed/delay));
-   scenarioValues.forEach(({node,label,target},i)=>{
-    const progress=clamp((elapsed-i*delay)/duration,0,1);
-    node.textContent=label.replace(/\d+/,String(Math.round(target*(1-(1-progress)**3))));
-   });
-   if(elapsed<duration+delay*(scenarioValues.length-1))scenarioFrame=requestAnimationFrame(count);
-   else finishScenario();
+ const stats=new IntersectionObserver(entries=>{
+  for(const {target:card,isIntersecting} of entries){
+   if(!isIntersecting)continue;
+   stats.unobserve(card);
+   if(reduced.matches)continue;
+   const value=$('[data-scenario-value]',card),label=value.textContent;
+   const target=parseInt(label,10),start=performance.now();
+   const delay=Number(card.dataset.statDelay);
+   function count(time){
+    const progress=clamp((time-start-delay)/640,0,1);
+    value.textContent=label.replace(/\d+/,String(Math.round(target*(1-(1-progress)**3))));
+    if(progress<1&&!reduced.matches)requestAnimationFrame(count);
+    else value.textContent=label;
+   }
+   count(start);
   }
-  count(start);
- },{threshold:.3});
- observer.observe(scenarioStats);
+ },{threshold:.55});
+ $$('[data-stat-delay]').forEach(card=>stats.observe(card));
 }
-reduced.addEventListener('change',finishScenario);
 
 const form=$('#devis'),status=$('#form-status'),formMode=$('#form-mode'),submit=$('button[type=submit]',form);
 $$('[data-need]').forEach(a=>a.addEventListener('click',()=>{form.elements.besoin.value=a.dataset.need}));
@@ -218,7 +193,7 @@ function showStatus(msg,error=false){status.textContent=msg;status.toggleAttribu
 function mailto(data){
  const type=form.elements.besoin.selectedOptions[0].textContent;
  const body=['Bonjour Marc,','','Je souhaite discuter de ce projet vidéo :','',data.message,'','Nom : '+data.nom,'Entreprise : '+data.entreprise,'E-mail : '+data.email,'Besoin : '+type].join('\r\n');
- return 'mailto:marcbrioche.agence@gmail.com?subject='+encodeURIComponent('Demande CINÉLIEU — '+type)+'&body='+encodeURIComponent(body);
+ return $('.contact-mail').getAttribute('href').split('?')[0]+'?subject='+encodeURIComponent('Demande CINÉLIEU — '+type)+'&body='+encodeURIComponent(body);
 }
 async function configContact(){
  try{
