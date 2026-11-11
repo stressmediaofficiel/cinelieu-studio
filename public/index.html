@@ -51,7 +51,7 @@
     <a class="brand" href="#accueil" aria-label="CINÉLIEU Studio, accueil"><img src="/assets/logo.svg" width="34" height="34" alt=""><span>CINÉLIEU <small>STUDIO</small></span></a>
     <button class="menu-toggle icon-btn" aria-controls="nav-links" aria-expanded="false" aria-label="Ouvrir le menu"><svg><use href="#menu"/></svg></button>
     <div class="nav-links" id="nav-links">
-      <a href="#demonstration">La transformation</a><a href="#prestations">Prestations</a><a href="#galerie">Galerie</a><a href="#tarifs">Tarifs</a><a href="#contact" class="mobile-contact">Contact</a>
+      <a href="#demonstration">La transformation</a><a href="#conversion">Estimation</a><a href="#galerie">En images</a><a href="#tarifs">Tarifs</a><a href="#contact" class="mobile-contact">Contact</a>
     </div>
     <a class="btn btn-dark nav-cta magnetic" href="#contact">Parlons de votre projet <svg><use href="#up-right"/></svg></a>
   </nav>
@@ -59,83 +59,45 @@
 
 <main id="contenu">
 <section class="hero" id="accueil" aria-labelledby="hero-title">
-  <div class="hero-grid" aria-hidden="true"></div><div class="aurora" aria-hidden="true"></div>
+  <div class="hero-halo" aria-hidden="true"></div>
   <div class="hero-inner wrap">
     <p class="hero-label"><span></span> Studio de création vidéo immobilière</p>
     <h1 id="hero-title">Vos biens méritent mieux<br class="hero-br"> <em>qu’un simple diaporama.</em></h1>
     <p class="hero-copy">Nous transformons vos photos immobilières en vidéos cinématiques, prêtes à captiver vos futurs clients. <span>Sans tournage, sans déplacement.</span></p>
     <div class="hero-actions">
-      <a href="#galerie" class="btn btn-dark magnetic">Découvrir nos créations <svg><use href="#arrow"/></svg></a>
-      <a href="#contact" data-need="aperçu" class="btn btn-light magnetic">Demander un aperçu <svg><use href="#up-right"/></svg></a>
+      <a class="view-cta hero-view-cta" data-view-cta href="#contact" data-need="aperçu"><span>Parlons de</span><span class="view-cta-accent">votre projet <svg aria-hidden="true"><use href="#up-right"/></svg></span></a>
     </div>
-    <div class="hero-scene">
-      <div class="scene-frame">
-        <img src="/assets/film-interieurs.webp" class="hero-photo" width="1280" height="720" alt="Salon contemporain ouvert sur un jardin par de grandes baies vitrées" fetchpriority="high">
-        <video class="hero-video" data-src="/assets/film-interieurs.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
-        <div class="scene-glass" aria-hidden="true"></div>
-        <span class="scene-tag"><i></i> Film d’illustration</span>
-        <button class="hero-play icon-btn" type="button" data-film="film-interieurs" aria-label="Voir le film d’illustration"><svg><use href="#play"/></svg></button>
-      </div>
-      <div class="float-card float-photo" aria-hidden="true">
-        <img src="/assets/film-interieurs.webp" width="104" height="68" alt="" loading="lazy">
-        <span><small>Point de départ</small>Un cadre</span>
-      </div>
-      <div class="float-card float-video" aria-hidden="true">
-        <span class="float-icon"><svg><use href="#film"/></svg></span>
-        <span><small>En mouvement</small>Un film</span>
-        <svg class="float-arrow"><use href="#up-right"/></svg>
-      </div>
-    </div>
-    <a class="view-cta hero-view-cta" data-view-cta href="#demonstration"><span>Découvrir</span><span class="view-cta-accent">l’avant / après <svg><use href="#down"/></svg></span></a>
+    <figure class="flow-frame hero-frame" data-film-frame>
+      <img src="/assets/flow-accueil.webp" width="1280" height="720" alt="Séjour lumineux et baies vitrées ouvertes sur la végétation" fetchpriority="high">
+      <video data-flow-video data-src="/assets/flow-accueil.mp4" muted playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
+    </figure>
   </div>
 </section>
 
-<section class="section transform-section" id="demonstration" aria-labelledby="compare-title">
-  <div class="intro wrap" data-reveal>
-    <div><p class="eyebrow">La transformation</p><h2 id="compare-title" data-words>Une photo.<br> Une nouvelle perspective.</h2></div>
-  </div>
-  <div class="motion-track wrap" aria-hidden="true">
-    <div class="motion-stage">
-      <div class="motion-blackout"></div><div class="motion-grid"></div>
-      <div class="motion-top"><span><i></i> DU CADRE AU MOUVEMENT</span><span>01 / 02</span></div>
-      <div class="motion-frame">
-        <div class="motion-window">
-          <img src="/assets/salon-verriere.webp" width="1120" height="630" alt="" loading="lazy">
-          <video class="motion-video" data-src="/assets/salon-verriere.mp4" preload="none" muted playsinline></video>
-          <div class="motion-shade"></div>
-          <div class="motion-guides"><i></i><i></i><i></i><i></i></div>
-          <div class="motion-play"><svg><use href="#play"/></svg></div>
-          <div class="motion-expand"><svg><use href="#expand"/></svg></div>
-          <div class="motion-cursor"><i></i><svg viewBox="0 0 32 36"><path d="M3 2 28 21l-11 1-5 10z"/></svg></div>
-          <span class="motion-record"><i></i> EN MOUVEMENT</span>
-        </div>
+<section class="section transform-section wrap" id="demonstration" aria-labelledby="compare-title">
+  <div class="intro" data-reveal><h2 id="compare-title" data-words>Une photo.<br> Un lieu qui prend vie.</h2></div>
+  <figure class="flow-frame transform-frame" id="comparateur" data-film-frame>
+    <img src="/assets/flow-mouvement.webp" width="1120" height="630" loading="lazy" alt="Cuisine lumineuse, avec des plantes et des étagères en bois">
+    <video data-flow-video data-src="/assets/flow-mouvement.mp4" muted playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
+  </figure>
+</section>
+
+<section class="section conversion-section" id="conversion" aria-labelledby="conversion-title">
+  <div class="wrap">
+    <div class="intro" data-reveal><p class="eyebrow">Estimation interactive</p><h2 id="conversion-title" data-words>Combien de demandes<br> en plus ?</h2><p>Simulez l’effet d’une hausse du taux de conversion, à trafic égal.</p></div>
+    <div class="conversion-card">
+      <div class="conversion-fields">
+        <label>Visites par mois<input id="estimate-visits" type="number" value="1000" min="0" max="1000000" step="1" inputmode="numeric"></label>
+        <label>Taux actuel (%)<input id="estimate-rate" type="number" value="2" min="0" max="100" step="any" inputmode="decimal"></label>
+        <label>Hausse envisagée (points)<input id="estimate-increase" type="number" value="0.5" min="0" max="100" step="any" inputmode="decimal" aria-describedby="estimate-note"></label>
       </div>
+      <div class="conversion-results">
+        <div class="conversion-highlight"><span id="estimate-gain" aria-hidden="true">+5</span><p>demandes de contact en plus par mois</p></div>
+        <dl class="conversion-compare"><div><dt>Aujourd’hui</dt><dd id="estimate-before">20</dd></div><div><dt>Dans ce scénario</dt><dd id="estimate-after">25</dd></div></dl>
+      </div>
+      <p id="estimate-note" class="estimate-note">Un point fait passer, par exemple, de 2 % à 3 %. Cette simulation est une hypothèse, sans résultat garanti.</p>
+      <p id="estimate-announcement" class="visually-hidden" role="status">20 demandes aujourd’hui, 25 dans ce scénario, soit 5 demandes de contact supplémentaires par mois.</p>
     </div>
-  </div>
-  <div class="compare-block wrap" id="comparateur">
-    <div class="compare-bar">
-      <p class="compare-hint" id="compare-hint"><svg><use href="#move"/></svg> Glissez pour comparer</p>
-      <div class="compare-select" role="group" aria-label="Choisir un appartement">
-        <button type="button" data-compare="salon-verriere" aria-pressed="true" aria-controls="compare-panel">Séjour</button>
-        <button type="button" data-compare="plan-appartement" aria-pressed="false" aria-controls="compare-panel">Appartement</button>
-      </div>
-    </div>
-    <figure class="compare-shell" id="compare-panel">
-      <div class="compare" style="--cut:50%">
-        <img class="compare-photo" src="/assets/salon-verriere.webp" width="1120" height="630" loading="lazy" alt="Image fixe extraite du plan du séjour sous verrière" draggable="false">
-        <div class="compare-after">
-          <img src="/assets/salon-verriere-apres.webp" width="1120" height="630" loading="lazy" alt="" draggable="false">
-          <video id="compare-video" data-src="/assets/salon-verriere.mp4" preload="none" muted playsinline loop aria-label="Vidéo du séjour sous verrière"></video>
-        </div>
-        <span class="compare-label before-label">Photo</span><span class="compare-label after-label"><i></i> Vidéo</span>
-        <span class="compare-line" aria-hidden="true"><span><svg><use href="#move"/></svg></span></span>
-        <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Comparer la photo et la vidéo" aria-describedby="compare-hint" aria-valuetext="50 % photo, 50 % vidéo">
-      </div>
-      <figcaption class="compare-footer">
-        <div><span id="compare-description">Plan d’illustration · <a href="https://www.pexels.com/video/beautiful-living-area-interiors-5091093/" target="_blank" rel="noopener noreferrer" aria-label="Crédit du plan : ArtHouse Studio sur Pexels">Crédit</a></span><span id="compare-status" role="status"></span></div>
-        <div class="compare-controls"><button type="button" class="icon-btn compare-play" aria-controls="compare-video" aria-pressed="false" aria-label="Lire la vidéo"><svg><use href="#play"/></svg></button><button type="button" class="icon-btn compare-expand" data-film="salon-verriere" aria-label="Agrandir la vidéo"><svg><use href="#expand"/></svg></button></div>
-      </figcaption>
-    </figure>
   </div>
 </section>
 
@@ -155,7 +117,7 @@
   <div class="bento">
     <article class="service service-feature" data-reveal>
       <div class="service-copy"><span class="service-icon"><svg><use href="#film"/></svg></span><h3>Animation de photos immobilières</h3><p>Travellings numériques, recadrages et transitions donnent du relief à vos images existantes.</p></div>
-      <div class="service-film" aria-hidden="true"><img src="/assets/villa.webp" width="1440" height="810" loading="lazy" alt=""><div class="frame-corners"></div><span><svg><use href="#play"/></svg></span></div>
+      <div class="service-film" aria-hidden="true"><img src="/assets/flow-accueil.webp" width="1280" height="720" loading="lazy" alt=""><div class="frame-corners"></div></div>
     </article>
     <article class="service vertical" data-reveal style="--delay:80ms"><div class="service-copy"><span class="service-icon"><svg><use href="#phone"/></svg></span><h3>Vidéos verticales</h3><p>Format 9:16 pour Instagram Reels, TikTok et Facebook.</p></div><div class="mini-phone" aria-hidden="true"><img src="/assets/location.webp" width="744" height="488" loading="lazy" alt=""></div></article>
     <article class="service" data-reveal><div class="service-copy"><span class="service-icon"><svg><use href="#wide"/></svg></span><h3>Vidéos horizontales</h3><p>Format 16:9 pour sites web et présentations.</p></div></article>
@@ -177,23 +139,20 @@
 
 <section class="section gallery" id="galerie" aria-labelledby="gallery-title">
   <div class="wrap">
-    <div class="intro split" data-reveal><div><p class="eyebrow">Galerie de démonstrations</p><h2 id="gallery-title" data-words>Quatre lieux.<br> Quatre ambiances.</h2></div><p>Des exemples illustratifs à partir d’images créées pour le studio. Explorez le rendu des formats horizontaux et verticaux.</p></div>
-    <div class="filters" role="group" aria-label="Filtrer les démonstrations">
-      <button type="button" aria-pressed="true" data-filter="tout">Tout voir</button><button type="button" aria-pressed="false" data-filter="appartement">Appartement</button><button type="button" aria-pressed="false" data-filter="villa">Villa</button><button type="button" aria-pressed="false" data-filter="chalet">Chalet</button><button type="button" aria-pressed="false" data-filter="location">Location saisonnière</button>
-    </div>
-    <div class="gallery-grid" aria-live="polite">
-      <article class="gallery-card" data-category="villa" data-reveal>
-        <button type="button" data-film="villa" aria-label="Voir Villa provençale"><img src="/assets/villa.webp" width="1440" height="810" alt="" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true"></video><span class="gallery-format">16:9</span><span class="gallery-play"><svg><use href="#play"/></svg></span><span class="gallery-caption"><small>Villa · Démonstration</small><strong>Villa provençale</strong></span></button>
-      </article>
-      <article class="gallery-card portrait" data-category="appartement" data-reveal style="--delay:90ms">
-        <button type="button" data-film="appartement" aria-label="Voir Appartement haussmannien"><img src="/assets/appartement.webp" width="744" height="488" alt="" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true"></video><span class="gallery-format">9:16</span><span class="gallery-play"><svg><use href="#play"/></svg></span><span class="gallery-caption"><small>Appartement · Démonstration</small><strong>Appartement haussmannien</strong></span></button>
-      </article>
-      <article class="gallery-card" data-category="chalet" data-reveal>
-        <button type="button" data-film="chalet" aria-label="Voir Chalet des Alpes"><img src="/assets/chalet.webp" width="744" height="488" alt="" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true"></video><span class="gallery-format">16:9</span><span class="gallery-play"><svg><use href="#play"/></svg></span><span class="gallery-caption"><small>Chalet · Démonstration</small><strong>Chalet des Alpes</strong></span></button>
-      </article>
-      <article class="gallery-card portrait" data-category="location" data-reveal style="--delay:90ms">
-        <button type="button" data-film="location" aria-label="Voir Escale méditerranéenne"><img src="/assets/location.webp" width="744" height="488" alt="" loading="lazy"><video muted loop playsinline preload="none" aria-hidden="true"></video><span class="gallery-format">9:16</span><span class="gallery-play"><svg><use href="#play"/></svg></span><span class="gallery-caption"><small>Location saisonnière · Démonstration</small><strong>Escale méditerranéenne</strong></span></button>
-      </article>
+    <div class="intro" data-reveal><h2 id="gallery-title" data-words>Des lieux, des ambiances.</h2></div>
+    <div class="flow-gallery">
+      <figure class="flow-frame flow-feature" data-film-frame>
+        <img src="/assets/flow-villa.webp" width="1120" height="630" loading="lazy" alt="Façade de villa contemporaine éclairée par le soleil">
+        <video data-flow-video data-src="/assets/flow-villa.mp4" muted playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
+      </figure>
+      <figure class="flow-frame" data-film-frame>
+        <img src="/assets/flow-interieur.webp" width="960" height="540" loading="lazy" alt="Séjour ouvert sur un jardin">
+        <video data-flow-video data-src="/assets/flow-interieur.mp4" muted playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
+      </figure>
+      <figure class="flow-frame" data-film-frame>
+        <img src="/assets/flow-chalet.webp" width="960" height="540" loading="lazy" alt="Chalet en bois dans un paysage de montagne enneigé">
+        <video data-flow-video data-src="/assets/flow-chalet.mp4" muted playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
+      </figure>
     </div>
   </div>
 </section>
@@ -252,14 +211,8 @@
 
 <footer class="footer">
   <div class="wrap footer-main"><a class="brand" href="#accueil" aria-label="CINÉLIEU Studio, retour à l’accueil"><img src="/assets/logo.svg" width="34" height="34" alt=""><span>CINÉLIEU <small>STUDIO</small></span></a><p>Des lieux qui prennent vie.</p><a href="#accueil" class="back-top">Haut de page <svg><use href="#up-right"/></svg></a></div>
-  <div class="wrap footer-bottom"><span>© CINÉLIEU Studio · France</span><div><a href="/mentions-legales.html">Mentions légales</a><a href="/confidentialite.html">Confidentialité</a></div></div>
+  <div class="wrap footer-bottom"><span>© CINÉLIEU Studio · France</span><div><a href="/mentions-legales.html#credits">Crédits vidéo</a><a href="/mentions-legales.html">Mentions légales</a><a href="/confidentialite.html">Confidentialité</a></div></div>
 </footer>
 
-<dialog id="film-dialog" class="film-dialog" aria-labelledby="film-title">
-  <div class="dialog-head"><div><p>Démonstration illustrative</p><h2 id="film-title">Vidéo</h2></div><button type="button" class="icon-btn dialog-close" aria-label="Fermer la vidéo" autofocus><svg><use href="#close"/></svg></button></div>
-  <video id="film-player" controls playsinline muted preload="none" aria-labelledby="film-title"></video>
-  <div class="dialog-foot"><span id="film-kind">Animation numérique · Vidéo sans audio</span><button type="button" class="icon-btn" id="native-fullscreen" aria-label="Afficher la vidéo en plein écran"><svg><use href="#expand"/></svg></button></div>
-  <p id="player-status" class="player-status" role="status"></p>
-</dialog>
 </body>
 </html>

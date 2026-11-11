@@ -21,8 +21,8 @@ Pour activer l’envoi direct, renseigner dans Cloudflare les secrets `RESEND_AP
 
 ## Contenus
 
-Le logo et les images optimisées sont dans `public/assets/`. Les quatre MP4 illustratifs sont des mouvements de caméra numériques sur des visuels créés pour le studio. Les remplacer sous les mêmes noms ou modifier le registre `films` dans `public/site.js` en ajustant les formats. Garder l’étiquette « Démonstration » tant que ces clips illustrent le procédé.
+Le logo et les médias sont dans `public/assets/`. Les cinq MP4 `flow-*` sont des plans filmés sous licence Pexels, hébergés sur le site. Les auteurs et sources sont regroupés dans les mentions légales. Chaque plan silencieux dure moins de cinq secondes, démarre lorsqu’il est visible, puis s’arrête ; l’image fixe reste disponible quand la lecture automatique est désactivée.
 
-Le film d’accueil monte deux plans d’ArtHouse Studio, [séjour sous verrière](https://www.pexels.com/video/beautiful-living-area-interiors-5091093/) et [second angle](https://www.pexels.com/video/an-interior-design-of-a-modern-house-5098244/), sous [licence Pexels](https://www.pexels.com/license/). Le comparateur présente le séjour et un [appartement filmé par Fernanda Neitzel](https://www.pexels.com/video/modern-living-room-with-elegant-interior-design-36030658/). Les images fixes sont extraites des MP4 livrés ; les fichiers `*-apres.webp` montrent une image plus tard dans le même plan. Ces plans illustrent le mouvement et ne sont pas des réalisations client ni des animations générées à partir d’une photo.
+Le simulateur donne un ordre de grandeur à trafic constant : il multiplie les visites mensuelles par le taux de conversion actuel, puis par le taux envisagé. Les valeurs proposées sont un scénario ajustable, sans prévision de résultat.
 
 Les coordonnées juridiques, les durées de conservation et les modalités commerciales restent à valider avec l’exploitant avant d’utiliser le site pour la prospection.
