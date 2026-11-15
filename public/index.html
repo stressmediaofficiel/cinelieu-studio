@@ -20,8 +20,8 @@
   <meta property="og:image:alt" content="CINÉLIEU Studio, des lieux qui prennent vie.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/logo-cinelieu.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=section-labels-centered">
-  <script type="module" src="/site.js?v=section-labels"></script>
+  <link rel="stylesheet" href="/styles.css?v=contact-formules">
+  <script type="module" src="/site.js?v=contact-formules"></script>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -68,7 +68,7 @@
     <h1 id="hero-title">Vos biens méritent mieux<br class="hero-br"> <em>qu’un simple diaporama.</em></h1>
     <p class="hero-copy">Nous transformons vos photos immobilières en vidéos cinématiques, prêtes à captiver vos futurs clients. <span>Sans tournage, sans déplacement.</span></p>
     <div class="hero-actions">
-      <a class="view-cta hero-view-cta" data-view-cta href="#contact" data-need="aperçu" aria-label="Parlons de votre projet"><span>Parlons de</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">votre projet <svg aria-hidden="true"><use href="#up-right"/></svg></span></span></span></a>
+      <a class="view-cta hero-view-cta" data-view-cta href="#contact" aria-label="Parlons de votre projet"><span>Parlons de</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">votre projet <svg aria-hidden="true"><use href="#up-right"/></svg></span></span></span></a>
     </div>
     <figure class="flow-frame hero-frame scan-frame" data-film-frame>
       <img src="/assets/film-accueil.webp" width="1120" height="630" alt="Séjour lumineux avec grandes fenêtres, escalier et canapé clair" fetchpriority="high">
@@ -256,7 +256,7 @@
         <li><svg aria-hidden="true"><use href="#check"/></svg><span>Mouvements fluides et musique</span></li>
         <li><svg aria-hidden="true"><use href="#check"/></svg><span>Livraison en MP4</span></li>
       </ul>
-      <a class="btn btn-light price-cta" href="#contact" data-need="unité" aria-label="Demander un devis pour la formule Essentiel">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
+      <a class="btn btn-light price-cta" href="#contact" data-need="unité" data-plan="essentiel" aria-label="Demander un devis pour la formule Essentiel">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
     </article>
     <article class="price price-signature" aria-labelledby="offer-signature" data-reveal style="--delay:45ms">
       <p class="price-recommendation">Notre recommandation</p>
@@ -271,7 +271,7 @@
         <li><svg aria-hidden="true"><use href="#check"/></svg><span><strong>1 série de corrections</strong></span></li>
         <li><svg aria-hidden="true"><use href="#check"/></svg><span>Livraison en MP4</span></li>
       </ul>
-      <a class="btn btn-dark price-cta" href="#contact" data-need="unité" aria-label="Demander un devis pour la formule Signature">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
+      <a class="btn btn-dark price-cta" href="#contact" data-need="unité" data-plan="signature" aria-label="Demander un devis pour la formule Signature">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
     </article>
     <article class="price price-prestige" aria-labelledby="offer-prestige" data-reveal style="--delay:90ms">
       <h3 id="offer-prestige">Prestige</h3>
@@ -285,7 +285,7 @@
         <li><svg aria-hidden="true"><use href="#check"/></svg><span><strong>2 séries de corrections</strong></span></li>
         <li><svg aria-hidden="true"><use href="#check"/></svg><span>Livraison en MP4</span></li>
       </ul>
-      <a class="btn btn-light price-cta" href="#contact" data-need="unité" aria-label="Demander un devis pour la formule Prestige">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
+      <a class="btn btn-light price-cta" href="#contact" data-need="unité" data-plan="prestige" aria-label="Demander un devis pour la formule Prestige">Demander un devis <svg aria-hidden="true"><use href="#up-right"/></svg></a>
     </article>
   </div>
 </section>
@@ -318,20 +318,44 @@
       <a class="btn contact-mail" href="mailto:contact@cinelieu.com?subject=Demande%20de%20devis%20CIN%C3%89LIEU%20Studio">Demander un devis par e-mail <svg aria-hidden="true"><use href="#up-right"/></svg></a>
     </div>
     <form class="form" id="devis" method="post" action="/api/contact" data-reveal aria-label="Demande de devis">
-      <div class="form-row">
-        <label>Nom<input name="nom" autocomplete="name" required maxlength="100"></label>
-        <label>Entreprise<input name="entreprise" autocomplete="organization" required maxlength="150"></label>
+      <div class="form-email">
+        <label>Votre e-mail<input name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"></label>
+        <div class="email-shortcuts" aria-label="Compléter le domaine de votre e-mail" hidden>
+          <button type="button" data-email-domain="gmail.com">@gmail.com</button>
+          <button type="button" data-email-domain="hotmail.com">@hotmail.com</button>
+        </div>
       </div>
-      <label>E-mail professionnel<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
-      <label>Type de besoin<select name="besoin" required><option value="">Sélectionner un besoin</option><option value="aperçu">Aperçu de mon bien</option><option value="unité">Vidéo à l’unité</option><option value="pack">Pack professionnel</option><option value="sur-mesure">Accompagnement sur mesure</option><option value="autre">Autre demande</option></select></label>
-      <label>Votre projet<textarea name="message" rows="4" required maxlength="2000" placeholder="Le type de bien, le nombre de vidéos, les supports envisagés…"></textarea></label>
+      <fieldset class="form-plans">
+        <legend>Votre formule</legend>
+        <div class="form-plan-grid">
+          <label><input type="radio" name="formule" value="essentiel" required><span><strong>Essentiel</strong><small>69 €</small></span></label>
+          <label class="form-plan-signature"><input type="radio" name="formule" value="signature"><span><strong>Signature</strong><small>99 €</small></span></label>
+          <label><input type="radio" name="formule" value="prestige"><span><strong>Prestige</strong><small>149 €</small></span></label>
+        </div>
+        <label class="form-plan-unsure"><input type="radio" name="formule" value="autre" aria-controls="custom-need"> Autre</label>
+      </fieldset>
+      <label id="custom-need">Votre besoin<select name="besoin" disabled>
+        <option value="">Sélectionner un besoin</option>
+        <option value="pack">Des vidéos pour plusieurs biens</option>
+        <option value="sur-mesure">Un projet sur mesure</option>
+        <option value="autre">Une question / autre demande</option>
+      </select></label>
+      <label>Votre projet<textarea name="message" rows="3" required maxlength="2000" placeholder="Ex. Une vidéo pour présenter mon chalet sur Instagram."></textarea></label>
+      <details class="form-extras">
+        <summary>Ajouter mes coordonnées ou un lien <span>Facultatif</span></summary>
+        <div>
+          <div class="form-row"><label>Nom<input name="nom" autocomplete="name" maxlength="100"></label><label>Entreprise<input name="entreprise" autocomplete="organization" maxlength="150"></label></div>
+          <label>Lien de votre annonce<input name="annonce" type="text" inputmode="url" autocapitalize="none" spellcheck="false" maxlength="1000" placeholder="https://…"></label>
+          <label>Téléphone<input name="telephone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32"></label>
+        </div>
+      </details>
       <div class="honeypot" aria-hidden="true"><label>Site internet<input name="website" tabindex="-1" autocomplete="off" maxlength="200"></label></div>
       <label class="consent"><input type="checkbox" name="consentement" value="oui" required><span>J’accepte que les données saisies soient utilisées pour répondre à ma demande. <a href="/confidentialite.html">Politique de confidentialité</a></span></label>
       <div id="antispam" hidden></div>
-      <button class="view-cta contact-view-cta" data-view-cta type="submit" aria-label="Demander mon devis"><span>Demander</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">mon devis <svg aria-hidden="true"><use href="#arrow"/></svg></span></span></span></button>
-      <p id="form-mode" class="form-help">Le bouton prépare votre demande dans votre application de messagerie.</p>
+      <button class="view-cta contact-view-cta" data-view-cta type="submit" disabled aria-label="Envoyer ma demande"><span>Envoyer</span><span class="cta-reveal"><span class="cta-clip"><span class="view-cta-accent">ma demande <svg aria-hidden="true"><use href="#arrow"/></svg></span></span></span></button>
+      <p id="form-mode" class="form-help">Vérification de la disponibilité de l’envoi…</p>
       <p id="form-status" class="form-status" role="status"></p>
-      <noscript><p class="form-help">Pour envoyer votre demande, utilisez le lien e-mail.</p></noscript>
+      <noscript><p class="form-help">Activez JavaScript pour utiliser le formulaire, ou contactez-nous par e-mail.</p></noscript>
     </form>
   </div>
 </section>

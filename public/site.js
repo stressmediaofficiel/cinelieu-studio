@@ -358,43 +358,88 @@ if('IntersectionObserver'in window&&!reduced.matches){
 }
 
 const form=$('#devis'),status=$('#form-status'),formMode=$('#form-mode'),submit=$('button[type=submit]',form);
-$$('[data-need]').forEach(a=>a.addEventListener('click',()=>{form.elements.besoin.value=a.dataset.need}));
-let widget=null,direct=false;
-function showStatus(msg,error=false){status.textContent=msg;status.toggleAttribute('data-error',error)}
-function mailto(data){
- const type=form.elements.besoin.selectedOptions[0].textContent;
- const body=['Bonjour à l’équipe CINÉLIEU,','','Je souhaite discuter de ce projet vidéo :','',data.message,'','Nom : '+data.nom,'Entreprise : '+data.entreprise,'E-mail : '+data.email,'Besoin : '+type].join('\r\n');
- return $('.contact-mail').getAttribute('href').split('?')[0]+'?subject='+encodeURIComponent('Demande CINÉLIEU — '+type)+'&body='+encodeURIComponent(body);
+const emailField=form.elements.email,emailShortcuts=$('.email-shortcuts',form);
+const needField=form.elements.besoin;
+function syncCustomNeed(){
+ const custom=form.elements.formule.value==='autre';
+ needField.disabled=!custom;
+ needField.required=custom;
+}
+form.addEventListener('change',event=>{
+ if(event.target.name==='formule')syncCustomNeed();
+});
+for(const link of $$('[data-plan]')){
+ link.addEventListener('click',()=>{
+  form.elements.formule.value=link.dataset.plan;
+  syncCustomNeed();
+ });
+}
+syncCustomNeed();
+emailShortcuts.hidden=false;
+for(const button of $$('[data-email-domain]',emailShortcuts)){
+ button.addEventListener('click',()=>{
+  const local=emailField.value.trim().split('@')[0];
+  emailField.focus();
+  if(!local)return;
+  emailField.value=local+'@'+button.dataset.emailDomain;
+ });
+}
+let widget=null;
+function showStatus(message,error=false){
+ status.textContent=message;
+ status.toggleAttribute('data-error',error);
+}
+function contactUnavailable(){
+ formMode.textContent='L’envoi depuis le site est indisponible pour le moment. Vous pouvez nous joindre par e-mail.';
+ submit.disabled=true;
 }
 async function configContact(){
  try{
-  const r=await fetch('/api/contact',{headers:{Accept:'application/json'}});
-  if(!r.ok||!r.headers.get('content-type')?.includes('application/json'))return;
-  const cfg=await r.json();if(!cfg.enabled||!cfg.siteKey)return;
-  const s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;
-  s.onload=()=>{try{$('#antispam').hidden=false;widget=window.turnstile.render('#antispam',{sitekey:cfg.siteKey,language:'fr'});direct=true;formMode.textContent='Votre demande est transmise à l’équipe CINÉLIEU.'}catch{$('#antispam').hidden=true}};
-  document.head.append(s);
- }catch{/* Le brouillon e-mail reste disponible. */}
+  const response=await fetch('/api/contact',{headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)});
+  if(!response.ok)throw Error();
+  const config=await response.json();
+  if(!config.enabled||!config.siteKey){contactUnavailable();return}
+  const script=document.createElement('script');
+  script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  script.async=true;
+  script.onerror=contactUnavailable;
+  script.onload=()=>{
+   try{
+    $('#antispam').hidden=false;
+    widget=window.turnstile.render('#antispam',{
+     sitekey:config.siteKey,language:'fr',appearance:'interaction-only',action:'contact',
+     'error-callback':()=>showStatus('La vérification antispam est momentanément indisponible.',true)
+    });
+    submit.disabled=false;
+    formMode.textContent='Vous recevrez notre réponse à l’adresse indiquée.';
+   }catch{contactUnavailable()}
+  };
+  document.head.append(script);
+ }catch{contactUnavailable()}
 }
-if('IntersectionObserver'in window){const o=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){o.disconnect();configContact()}},{rootMargin:'300px'});o.observe(form)}
-else configContact();
-form.addEventListener('submit',async e=>{
- e.preventDefault();if(!form.reportValidity())return;
+if('IntersectionObserver'in window){
+ const observer=new IntersectionObserver(([entry])=>{
+  if(entry.isIntersecting){observer.disconnect();configContact()}
+ },{rootMargin:'300px'});
+ observer.observe(form);
+}else configContact();
+form.addEventListener('submit',async event=>{
+ event.preventDefault();
+ if(widget===null||submit.disabled||!form.reportValidity())return;
  const data=Object.fromEntries(new FormData(form));
- for(const key of ['nom','entreprise','email','message'])data[key]=data[key].trim();
- if(!data.nom||!data.entreprise||!data.message){showStatus('Complétez le nom, l’entreprise et le message.',true);return}
- if(data.website){showStatus('La demande n’a pas été envoyée. Utilisez le lien e-mail.',true);return}
- if(!direct){
-  showStatus('Votre brouillon est prêt. Validez l’envoi dans votre application de messagerie.');
-  location.href=mailto(data);return;
- }
+ data.message=data.message.trim();
+ if(!data.message){showStatus('Décrivez votre projet en quelques mots.',true);return}
  data.token=window.turnstile.getResponse(widget);
- if(!data.token){showStatus('Terminez la vérification antispam avant d’envoyer.',true);return}
- submit.disabled=true;showStatus('Transmission en cours…');
+ if(!data.token){showStatus('Patientez un instant ou terminez la vérification antispam.',true);return}
+ submit.disabled=true;
+ showStatus('Envoi en cours…');
  try{
-  const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  const result=await r.json();if(!r.ok||!result.ok)throw Error(result.error||'L’envoi a échoué.');
-  showStatus('Votre demande a été transmise. Merci.');form.reset();
- }catch(err){showStatus((err.message||'Impossible de transmettre la demande.')+' Vous pouvez aussi utiliser le lien e-mail.',true)}
+  const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(22000)});
+  const result=await response.json();
+  if(!response.ok||!result.ok)throw Error(result.error||'L’envoi a échoué.');
+  form.reset();
+  syncCustomNeed();
+  showStatus('Merci ! Votre demande a bien été envoyée.');
+ }catch(error){showStatus(error.name==='TimeoutError'?'L’envoi n’a pas pu être confirmé. Vous pouvez nous écrire par e-mail.':error.message,true)}
  finally{submit.disabled=false;window.turnstile.reset(widget)}
 });
