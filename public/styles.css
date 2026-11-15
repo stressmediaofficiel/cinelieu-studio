@@ -231,6 +231,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 }
 .stack-card.is-covered{border-color:#739788}
 .stack-card video{transition-duration:.12s}
+.gallery-iris{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 .gallery .media-tools{max-width:1040px;margin-top:0}
 .gallery .media-toggle{background:#25372d;border-color:#4c695a;color:#e6f5eb}
 .gallery .media-toggle:hover{border-color:#78d79c}
@@ -242,6 +243,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 }
 @media(prefers-reduced-motion:reduce){
  .scan-frame.is-playing video,.scan-frame.is-playing::after{animation:none}
+ .gallery-iris{display:none}
 }
 
 

@@ -58,6 +58,7 @@ function scrollEffects(){
  const layer=readGalleryLayer(height);
  progress.style.transform='scaleX('+ratio+')';
  showGalleryLayer(layer);
+ updateGalleryIrises(height);
  highlightService(height);
  if(rect.top>=height||rect.bottom<=0)return;
  const line=height*.57-rect.top;
@@ -93,6 +94,113 @@ function highlightService(height){
 reduced.addEventListener('change',queue);
 
 const gallery=$('[data-gallery-stack]'),galleryMarks=$$('.stack-mark',gallery),galleryCards=$$('.stack-card',gallery);
+const galleryIrises=galleryCards.map(card=>{
+ const canvas=document.createElement('canvas');
+ const context=canvas.getContext('2d');
+ if(!context)return null;
+ canvas.className='gallery-iris';
+ canvas.setAttribute('aria-hidden','true');
+ canvas.hidden=true;
+ card.append(canvas);
+ return {canvas,context,width:0,height:0,opening:-1};
+});
+
+function drawGalleryIris(iris,opening){
+ const {canvas,context:ctx}=iris;
+ const width=canvas.clientWidth,height=canvas.clientHeight;
+ if(!width||!height||(iris.width===width&&iris.height===height&&iris.opening===opening))return;
+ Object.assign(iris,{width,height,opening});
+ const scale=Math.min(devicePixelRatio||1,1.5);
+ const pixelWidth=Math.round(width*scale),pixelHeight=Math.round(height*scale);
+ if(canvas.width!==pixelWidth)canvas.width=pixelWidth;
+ if(canvas.height!==pixelHeight)canvas.height=pixelHeight;
+ ctx.setTransform(pixelWidth/width,0,0,pixelHeight/height,0,0);
+ ctx.clearRect(0,0,width,height);
+ ctx.save();
+ ctx.translate(width/2,height/2);
+
+ const limit=Math.hypot(width,height)/2;
+ const radius=Math.min(width,height)*(.43+.12*opening);
+ const hole=limit*1.15*opening;
+ const shell=ctx.createRadialGradient(0,-radius*.28,radius*.15,0,0,limit);
+ shell.addColorStop(0,'#2d3032');
+ shell.addColorStop(.58,'#191b1d');
+ shell.addColorStop(1,'#0c0e10');
+ ctx.fillStyle=shell;
+ ctx.fillRect(-width/2,-height/2,width,height);
+
+ // Trace the same seven curved edges for the blades and the opening.
+ const step=Math.PI*2/7,rotation=-Math.PI/2-opening*.62;
+ const outer=Math.max(radius*.91,hole+radius*.64);
+ const point=(r,angle)=>[r*Math.cos(angle),r*Math.sin(angle)];
+ const inner=Array.from({length:7},(_,i)=>point(hole,rotation+i*step));
+ const roots=inner.map((_,i)=>point(outer,rotation+i*step-1.02));
+ const curves=inner.map((_,i)=>point((outer+hole)*.54,rotation+i*step-.27));
+ const lip=inner.map((_,i)=>point(hole*.94,rotation+(i+.5)*step));
+ for(let i=0;i<7;i++){
+  const next=(i+1)%7;
+  ctx.beginPath();
+  ctx.moveTo(...inner[i]);
+  ctx.quadraticCurveTo(...curves[i],...roots[i]);
+  ctx.arc(0,0,outer,rotation+i*step-1.02,rotation+(i+1)*step-1.02);
+  ctx.quadraticCurveTo(...curves[next],...inner[next]);
+  ctx.quadraticCurveTo(...lip[i],...inner[i]);
+  ctx.closePath();
+  const blade=ctx.createLinearGradient(...roots[i],...roots[next]);
+  blade.addColorStop(0,'#24272a');
+  blade.addColorStop(.55,'#3b3e41');
+  blade.addColorStop(1,'#2b2e30');
+  ctx.fillStyle=blade;
+  ctx.fill();
+  ctx.strokeStyle='#121416';
+  ctx.lineWidth=1.2;
+  ctx.stroke();
+ }
+
+ const ringRadius=radius*(1-.32*opening);
+ const steel=ctx.createLinearGradient(0,-ringRadius,0,ringRadius);
+ steel.addColorStop(0,'#686d71');
+ steel.addColorStop(.4,'#303438');
+ steel.addColorStop(.82,'#16191c');
+ steel.addColorStop(1,'#454a4f');
+ ctx.globalAlpha=1-opening;
+ for(const [offset,color,lineWidth] of [[0,'#111315',radius*.14],[0,steel,radius*.085],[.067,'#80858a',.8],[-.073,'#101214',1.2]]){
+  ctx.beginPath();
+  ctx.arc(0,0,ringRadius+radius*offset,0,Math.PI*2);
+  ctx.strokeStyle=color;
+  ctx.lineWidth=lineWidth;
+  ctx.stroke();
+ }
+ ctx.globalAlpha=1;
+ if(hole>0){
+  ctx.globalCompositeOperation='destination-out';
+  ctx.beginPath();
+  ctx.moveTo(...inner[0]);
+  for(let i=0;i<7;i++)ctx.quadraticCurveTo(...lip[i],...inner[(i+1)%7]);
+  ctx.fill();
+ }
+ ctx.restore();
+}
+
+function updateGalleryIrises(height){
+ if(reduced.matches){
+  for(const iris of galleryIrises)if(iris)iris.canvas.hidden=true;
+  return;
+ }
+ const top=gallery.getBoundingClientRect().top;
+ // The markers retain their document positions while the cards are sticky.
+ const positions=galleryMarks.map(mark=>top+mark.offsetTop);
+ const travel=clamp(height*.38,140,310);
+ for(let i=0;i<galleryIrises.length;i++){
+  const iris=galleryIrises[i];
+  if(!iris)continue;
+  const position=positions[i];
+  const progress=clamp((height+22-position)/travel,0,1);
+  iris.canvas.hidden=progress===1||position>height+100;
+  if(!iris.canvas.hidden)drawGalleryIris(iris,progress*progress*(3-2*progress));
+ }
+}
+
 let galleryLayer=-1,mediaPaused=false;
 let galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);
 addEventListener('resize',()=>{galleryPin=parseFloat(getComputedStyle(galleryCards[0]).top);queue()},{passive:true});
