@@ -1,5 +1,23 @@
 const $=(s,root=document)=>root.querySelector(s), $$=(s,root=document)=>[...root.querySelectorAll(s)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const platforms=$('[data-platforms]');
+if(platforms){
+ const track=$('.platform-track',platforms);
+ const copy=$('.platform-list',track).cloneNode(true);
+ copy.setAttribute('aria-hidden','true');
+ track.append(copy);
+ const pause=$('.platform-pause',platforms);
+ platforms.classList.add('is-looping');
+ const syncMotion=()=>{pause.hidden=reduced.matches};
+ pause.addEventListener('click',()=>{
+  const paused=pause.getAttribute('aria-pressed')!=='true';
+  pause.setAttribute('aria-pressed',String(paused));
+  platforms.classList.toggle('is-paused',paused);
+ });
+ reduced.addEventListener('change',syncMotion);
+ syncMotion();
+}
+
 const nav=$('.nav-links'),toggle=$('.menu-toggle');
 function menu(open){nav.classList.toggle('open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fermer le menu':'Ouvrir le menu');$('use',toggle).setAttribute('href',open?'#close':'#menu')}
 toggle.addEventListener('click',()=>menu(!nav.classList.contains('open')));

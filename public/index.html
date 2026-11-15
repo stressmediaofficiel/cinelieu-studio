@@ -20,8 +20,8 @@
   <meta property="og:image:alt" content="CINÉLIEU Studio, des lieux qui prennent vie.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/logo-cinelieu.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=gallery-iris">
-  <script type="module" src="/site.js?v=gallery-iris-2"></script>
+  <link rel="stylesheet" href="/styles.css?v=platforms">
+  <script type="module" src="/site.js?v=platforms"></script>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -74,6 +74,29 @@
       <video data-flow-video data-src="/assets/film-accueil.mp4" muted loop playsinline preload="none" disablepictureinpicture aria-hidden="true"></video>
     </figure>
     <div class="media-tools"><button type="button" class="media-toggle" data-media-toggle hidden>Mettre les vidéos en pause</button></div>
+    <div class="platforms" data-platforms>
+      <div class="platform-window">
+        <div class="platform-track" id="platform-track">
+          <ul class="platform-list" aria-label="Plateformes de publication et de partage">
+            <li class="platform-badge platform-instagram"><svg role="img" aria-label="Instagram" focusable="false"><use href="/assets/platform-marks.svg#instagram"/></svg></li>
+            <li class="platform-badge platform-tiktok"><svg role="img" aria-label="TikTok" focusable="false"><use href="/assets/platform-marks.svg#tiktok"/></svg></li>
+            <li class="platform-badge platform-youtube"><svg role="img" aria-label="YouTube" focusable="false"><use href="/assets/platform-marks.svg#youtube"/></svg></li>
+            <li class="platform-badge platform-facebook"><svg role="img" aria-label="Facebook" focusable="false"><use href="/assets/platform-marks.svg#facebook"/></svg></li>
+            <li class="platform-badge platform-linkedin"><svg role="img" aria-label="LinkedIn" focusable="false"><use href="/assets/platform-marks.svg#linkedin"/></svg></li>
+            <li class="platform-badge platform-pinterest"><svg role="img" aria-label="Pinterest" focusable="false"><use href="/assets/platform-marks.svg#pinterest"/></svg></li>
+            <li class="platform-badge platform-snapchat"><svg role="img" aria-label="Snapchat" focusable="false"><use href="/assets/platform-marks.svg#snapchat"/></svg></li>
+            <li class="platform-badge platform-whatsapp"><svg role="img" aria-label="WhatsApp" focusable="false"><use href="/assets/platform-marks.svg#whatsapp"/></svg></li>
+            <li class="platform-badge platform-vimeo"><svg role="img" aria-label="Vimeo" focusable="false"><use href="/assets/platform-marks.svg#vimeo"/></svg></li>
+          </ul>
+        </div>
+      </div>
+      <div class="platform-caption">
+        <p>Vos vidéos, <strong>prêtes à partager.</strong></p>
+        <button class="platform-pause" type="button" aria-controls="platform-track" aria-label="Mettre le carrousel des plateformes en pause" aria-pressed="false" hidden>
+          <svg aria-hidden="true" viewBox="0 0 16 16"><path class="platform-pause-bars" d="M6 4.5v7M10 4.5v7"/><path class="platform-play-arrow" d="m6 4.5 5 3.5-5 3.5z"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 

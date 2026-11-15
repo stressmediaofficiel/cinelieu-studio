@@ -455,3 +455,63 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
  #tarifs .price-signature{margin-block:0;padding-top:calc(var(--offer-padding) + 7px)}
  #tarifs .price-summary{min-height:0;margin-bottom:1rem}
 }
+
+.platforms{
+ --platform-size:clamp(57px,10vw,76px);
+ --platform-gap:clamp(12px,2vw,18px);
+ --platform-fade:clamp(28px,7vw,82px);
+ width:min(100%,800px);
+ margin:clamp(26px,4.5vw,52px) auto 0;
+}
+.platform-window{overflow:hidden;padding:8px 0 11px}
+.platform-track,.platform-list{display:flex;justify-content:center}
+.platform-list{list-style:none;flex-wrap:wrap;gap:var(--platform-gap);margin:0;padding:0}
+.platform-list[aria-hidden="true"]{display:none}
+.platform-badge{
+ display:grid;place-items:center;flex:none;
+ width:var(--platform-size);aspect-ratio:1;border-radius:50%;
+ color:var(--mark,#fff);
+ background:radial-gradient(ellipse at 28% 15%,#ffffff36,transparent 65%),linear-gradient(145deg,var(--platform-light),var(--platform-dark));
+ box-shadow:inset 0 0 0 1px #fff5,inset 0 0 0 3px #ffffff26,0 3px 7px #161b1918;
+}
+.platform-badge svg{display:block;width:47%;height:47%;fill:currentColor}
+.platform-instagram{--platform-light:#b642a4;--platform-dark:#912849;background:radial-gradient(ellipse at 23% 95%,#f5be63,transparent 63%),linear-gradient(145deg,#7847a7,#bd3c79 62%,#e57952)}
+.platform-tiktok{--platform-light:#38383c;--platform-dark:#101013}
+.platform-youtube{--platform-light:#f4504f;--platform-dark:#c41520}
+.platform-facebook{--platform-light:#458dff;--platform-dark:#1958bd}
+.platform-linkedin{--platform-light:#378dc4;--platform-dark:#07517d}
+.platform-pinterest{--platform-light:#ef4b64;--platform-dark:#b41934}
+.platform-snapchat{--platform-light:#fff68c;--platform-dark:#eccb30;--mark:#232123}
+.platform-whatsapp{--platform-light:#4fca87;--platform-dark:#117756}
+.platform-vimeo{--platform-light:#328ead;--platform-dark:#155d79}
+.platform-caption{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:7px}
+.platform-caption p{font-size:clamp(1rem,2.25vw,1.27rem);font-weight:500;color:#555c57;letter-spacing:-.035em}
+.platform-caption strong{font-weight:650;color:#202621}
+.platform-pause{
+ width:32px;height:32px;display:grid;place-items:center;flex:none;
+ border:1px solid #d9e1db;border-radius:50%;padding:0;background:#fff;color:#4a554e;
+}
+.platform-pause[hidden]{display:none}
+.platform-pause:hover{color:var(--brand-ink);border-color:#83ad92}
+.platform-pause:focus-visible{outline:2px solid var(--brand-ink);outline-offset:3px}
+.platform-pause svg{width:16px;height:16px}
+.platform-pause-bars{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+.platform-play-arrow{display:none;fill:currentColor}
+.platform-pause[aria-pressed="true"] .platform-pause-bars{display:none}
+.platform-pause[aria-pressed="true"] .platform-play-arrow{display:block}
+@media(prefers-reduced-motion:no-preference){
+ .platforms.is-looping .platform-window{
+  mask-image:linear-gradient(to right,transparent,#000 var(--platform-fade),#000 calc(100% - var(--platform-fade)),transparent);
+ }
+ .platforms.is-looping .platform-track{
+  justify-content:flex-start;width:max-content;animation:platform-scroll 34s linear infinite;
+ }
+ .platforms.is-looping .platform-list{
+  display:flex;flex:none;flex-wrap:nowrap;justify-content:flex-start;padding-inline-end:var(--platform-gap);
+ }
+ .platforms.is-paused .platform-track{animation-play-state:paused}
+ @media(max-width:740px){
+  .platforms.is-looping .platform-track{animation-duration:28s}
+ }
+}
+@keyframes platform-scroll{to{transform:translateX(-50%)}}
