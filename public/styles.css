@@ -542,3 +542,32 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
  .section-label span{color:color-mix(in srgb,var(--label-green),var(--label-gray) var(--label-muted,0%))}
  .section-label span::before{background:color-mix(in srgb,var(--green),var(--label-gray) var(--label-muted,0%))}
 }
+
+#devis .email-shortcuts{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+#devis .email-shortcuts[hidden]{display:none}
+#devis .email-shortcuts button{
+ min-height:34px;padding:4px 11px;border:1px solid #d9e8dc;border-radius:999px;
+ background:#f3faf4;color:#225338;font-size:.77rem;font-weight:650;
+}
+#devis .form-plans{margin:0;min-width:0;padding:0;border:0}
+#devis .form-plans legend{margin-bottom:7px;font-size:.81rem;font-weight:650}
+#devis .form-plans legend span,#devis .form-extras summary span{
+ margin-left:5px;color:#53635a;font-size:.72rem;font-weight:450;
+}
+#devis .form-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#devis .form-plan-grid label{position:relative;cursor:pointer}
+#devis .form-plan-grid input{position:absolute;width:1px;height:1px;clip-path:inset(50%);padding:0;min-height:0}
+#devis .form-plan-grid label>span{
+ display:grid;gap:3px;justify-items:center;align-content:center;min-height:58px;padding:7px 2px;
+ border:1px solid #d7e3da;border-radius:10px;background:#fbfdfb;
+ font-size:clamp(.7rem,2.9vw,.86rem);line-height:1.15;
+}
+#devis .form-plan-grid small{color:#496354;font-size:.76rem}
+#devis .form-plan-signature>span{background:#f1fcf4;border-color:#a7dbb7}
+#devis .form-plan-grid input:checked+span{border-color:#239654;background:#e0f9e7;box-shadow:inset 0 0 0 1px #239654}
+#devis .form-plan-grid input:focus-visible+span{outline:2px solid #15713a;outline-offset:2px}
+#devis .form-plan-unsure{display:flex;align-items:center;gap:6px;min-height:34px;margin-top:2px;color:#45594c}
+#devis .form-plan-unsure input{width:15px;height:15px;min-height:0;margin:0;accent-color:#24764e}
+#devis .form-extras summary{min-height:38px;padding:7px 0;cursor:pointer;font-size:.81rem;font-weight:650}
+#devis .form-extras>div{display:grid;gap:10px}
+#devis .view-cta:disabled{opacity:.55;cursor:default}

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import worker, {contact} from './contact.mjs';
-const env={CONTACT_FROM:'Studio <test@example.test>',RESEND_API_KEY:'test',TURNSTILE_SITE_KEY:'site',TURNSTILE_SECRET_KEY:'secret'};
+const env={HOSTINGER_MAIL_TOKEN:'test',HOSTINGER_MAILBOX_ID:'test-box',TURNSTILE_SITE_KEY:'site',TURNSTILE_SECRET_KEY:'secret'};
 const good={nom:'Camille',entreprise:'Agence',email:'camille@example.test',besoin:'unité',message:'Une vidéo pour une villa.',consentement:'oui',token:'token'};
 function post(payload,origin='https://example.test'){return new Request('https://example.test/api/contact',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(payload)})}
 test('aucune simulation de réussite sans configuration',async()=>{
@@ -19,14 +19,14 @@ test('un jeton d’un autre site ne permet pas l’envoi',async()=>{
 });
 test('le fournisseur reçoit le destinataire fixe et les données validées',async()=>{
  let sent;
- const r=await contact(post({...good,to:'not-allowed@example.test'}),env,async(url,init)=>{
-  if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test'});
+ const r=await contact(post({...good,formule:'signature',telephone:'+33 6 01 02 03 04',annonce:'example.test/chalet',to:'not-allowed@example.test'}),env,async(url,init)=>{
+  if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
   sent=JSON.parse(init.body);return Response.json({id:'fake-for-test'});
  });
- assert.equal(r.status,200);assert.deepEqual(sent.to,['contact@cinelieu.com']);assert.equal(sent.reply_to,good.email);
+ assert.equal(r.status,200);assert.deepEqual(sent.to,['contact@cinelieu.com']);assert.match(sent.text,/E-mail : camille@example\.test/);assert.match(sent.text,/Signature \(99 €\)/);assert.match(sent.text,/https:\/\/example\.test\/chalet/);assert.match(sent.text,/06|\+33 6/);
 });
 test('un rejet du fournisseur est rapporté comme une erreur',async()=>{
- const r=await contact(post(good),env,async(url)=>url.includes('turnstile')?Response.json({success:true,hostname:'example.test'}):new Response('',{status:503}));
+ const r=await contact(post(good),env,async(url)=>url.includes('turnstile')?Response.json({success:true,hostname:'example.test',action:'contact'}):new Response('',{status:503}));
  assert.equal(r.status,502);assert.equal((await r.json()).ok,false);
 });
 test('l’ancienne adresse redirige vers le domaine public en conservant le chemin et la requête',async()=>{
