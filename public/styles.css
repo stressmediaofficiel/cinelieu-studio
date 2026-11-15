@@ -534,6 +534,7 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 .section-label span::before{
  content:'';flex:none;width:1.25em;height:1px;background:var(--green);
 }
+.conversion-section .section-label span{transform-origin:center}
 .pricing-intro .section-label span{transform-origin:center}
 .contact .section-label{--label-green:#8aeea7;--label-gray:#bcc4bd}
 @media(prefers-reduced-motion:no-preference){
