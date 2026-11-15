@@ -42,6 +42,25 @@ if('IntersectionObserver'in window){
  }
 }
 const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+const sectionLabels=$$('.section-label');
+function updateSectionLabels(height){
+ if(reduced.matches)return;
+ const positions=sectionLabels.map(label=>label.getBoundingClientRect().top/height);
+ const ease=value=>{
+  const t=clamp(value,0,1);
+  return t*t*(3-2*t);
+ };
+ sectionLabels.forEach((label,i)=>{
+  const position=positions[i];
+  if(position>1.05||position<-.1)return;
+  const arrive=ease((.96-position)/.24);
+  const settle=ease((.52-position)/.26);
+  label.style.setProperty('--label-scale',(.96+.25*arrive-.25*settle).toFixed(3));
+  label.style.setProperty('--label-offset',(4*(1-arrive)).toFixed(2)+'px');
+  label.style.setProperty('--label-muted',(settle*100).toFixed(1)+'%');
+ });
+}
+
 let tick=0;
 const progress=$('.progress'),method=$('.method-flow');
 const steps=$$('.method-step',method),stepLinks=$$('.method-index',method);
@@ -77,6 +96,7 @@ function scrollEffects(){
  progress.style.transform='scaleX('+ratio+')';
  showGalleryLayer(layer);
  updateGalleryIrises(height);
+ updateSectionLabels(height);
  highlightService(height);
  if(rect.top>=height||rect.bottom<=0)return;
  const line=height*.57-rect.top;

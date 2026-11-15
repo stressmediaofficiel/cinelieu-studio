@@ -321,11 +321,11 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 [data-service-sequence] .vertical{display:flex;align-items:center;min-height:245px}
 [data-service-sequence] .vertical .service-copy{max-width:calc(100% - clamp(93px,21vw,157px))}
 .mini-phone{
- position:absolute;right:clamp(11px,4vw,33px);bottom:-25px;width:clamp(88px,20vw,118px);
+ position:absolute;right:clamp(11px,4vw,33px);bottom:22px;width:clamp(82px,18vw,104px);
  aspect-ratio:9/17.5;padding:5px;border:1px solid #414641;border-radius:19% / 10%;
  background:#111713;box-shadow:0 12px 23px #0b211848;
- transform:translateY(30%) rotate(12deg) scale(.88);opacity:.38;
- transition:transform .44s cubic-bezier(.2,.75,.25,1),opacity .26s
+ transform:translateY(60%) scale(.92);opacity:.86;
+ transition:transform .56s cubic-bezier(.2,.78,.24,1),opacity .35s,box-shadow .48s
 }
 .mini-phone::after{content:'';position:absolute;z-index:2;top:9px;left:50%;width:32%;height:6px;border-radius:12px;background:#101411;transform:translateX(-50%)}
 .mini-phone-screen{position:relative;height:100%;overflow:hidden;border-radius:15% / 8%;background:#25342b;color:white}
@@ -334,15 +334,19 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 .mini-phone-caption b,.mini-phone-caption small{font-size:.53rem;font-weight:500}
 .mini-phone-play{position:absolute;top:43%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#11261cba}
 .mini-phone-play svg{width:15px;height:15px}
-.vertical.is-lit .mini-phone{opacity:1;transform:translateY(-11%) rotate(5deg)}
+.vertical.is-lit .mini-phone{opacity:1;transform:translateY(-3px);box-shadow:0 15px 25px #0b21184f}
 
 @media(max-width:740px){
  .hero-frame{aspect-ratio:1.38;box-shadow:0 0 0 4px #fff,0 0 0 5px #e5e8e5,0 14px 35px #1f322920}
- [data-service-sequence] .vertical{grid-column:span 2;min-height:195px}
- .mini-phone{bottom:-17px;width:clamp(91px,25vw,103px);right:22px}
+ [data-service-sequence] .vertical{grid-column:1/-1;min-height:195px}
+ .mini-phone{bottom:19px;width:clamp(75px,23vw,91px);right:clamp(13px,5vw,22px)}
+ .service-packs{grid-column:1/-1;min-height:0;padding:19px}
+ .service-packs .service-copy{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 13px;align-items:center}
+ .service-packs .service-icon{grid-row:span 2;align-self:start;margin:0}
+ .service-packs p{margin:0}
 }
 @media(prefers-reduced-motion:reduce){
- .mini-phone{transform:rotate(5deg);opacity:1;transition:none}
+ .mini-phone{transform:none;opacity:1;transition:none}
 }
 
 
@@ -519,3 +523,21 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
  }
 }
 @keyframes platform-scroll{to{transform:translateX(-50%)}}
+
+
+.section-label{--label-green:var(--brand-ink);--label-gray:#646963}
+.section-label::before{display:none}
+.section-label span{
+ display:inline-flex;align-items:center;gap:.72em;
+ color:var(--label-green);transform-origin:left center;
+}
+.section-label span::before{
+ content:'';flex:none;width:1.25em;height:1px;background:var(--green);
+}
+.pricing-intro .section-label span{transform-origin:center}
+.contact .section-label{--label-green:#8aeea7;--label-gray:#bcc4bd}
+@media(prefers-reduced-motion:no-preference){
+ .section-label span{transform:translateY(var(--label-offset,0px)) scale(var(--label-scale,1))}
+ .section-label span{color:color-mix(in srgb,var(--label-green),var(--label-gray) var(--label-muted,0%))}
+ .section-label span::before{background:color-mix(in srgb,var(--green),var(--label-gray) var(--label-muted,0%))}
+}
