@@ -23,9 +23,16 @@ test('le fournisseur reçoit le destinataire fixe et les données validées',asy
   if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
   sent.push(JSON.parse(init.body));return new Response(null,{status:204});
  });
- assert.equal(r.status,200);assert.deepEqual(await r.json(),{ok:true,confirmationSent:true});
+ assert.equal(r.status,200);
+ const {ok,reference,confirmationSent}=await r.json();
+ assert.ok(ok&&confirmationSent);
+ assert.match(reference,/^CNL-[0-9A-F]{12}$/);
+ for(const message of sent){
+  assert.ok(message.subject.includes(reference));
+  assert.ok(message.text.includes('Numéro de demande : '+reference));
+ }
  assert.deepEqual(sent[0].to,['contact@cinelieu.com']);assert.match(sent[0].text,/E-mail : camille@example\.test/);assert.match(sent[0].text,/Signature \(99 €\)/);assert.match(sent[0].text,/https:\/\/example\.test\/chalet/);assert.match(sent[0].text,/\+33 6/);
- assert.deepEqual(sent[1].to,[good.email]);assert.match(sent[1].text,/Votre demande a bien été reçue/);assert(!sent[1].text.includes(good.message));
+ assert.deepEqual(sent[1].to,[good.email]);assert.match(sent[1].text,/Votre demande a bien été reçue/);assert.match(sent[1].text,/Formule : Signature \(99 €\)/);assert(!sent[1].text.includes(good.message));
 });
 test('un rejet du fournisseur est rapporté comme une erreur sans envoyer de confirmation',async()=>{
  let attempts=0;
@@ -43,7 +50,10 @@ test('un échec de confirmation conserve le succès de la demande transmise',asy
   if(JSON.parse(init.body).to[0]===good.email)throw Error('timeout');
   return new Response(null,{status:204});
  });
- assert.deepEqual(await r.json(),{ok:true,confirmationSent:false});
+ const {ok,reference,confirmationSent}=await r.json();
+ assert.equal(ok,true);
+ assert.equal(confirmationSent,false);
+ assert.match(reference,/^CNL-[0-9A-F]{12}$/);
 });
 test('le besoin personnalisé est requis uniquement pour Autre',async()=>{
  const never=()=>assert.fail('appel externe inattendu');

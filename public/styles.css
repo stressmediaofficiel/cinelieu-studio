@@ -545,36 +545,56 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 
 #devis .form-plans{margin:0;min-width:0;padding:0;border:0}
 #devis .form-plans legend{margin-bottom:7px;font-size:.81rem;font-weight:650}
-#devis .form-plans legend span,#devis .form-extras summary span{
- margin-left:5px;color:#53635a;font-size:.72rem;font-weight:450;
-}
 #devis .form-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-#devis .form-plan-grid label{position:relative;cursor:pointer}
+#devis .form-plan-grid label{
+ --plan-tint:#f5f7f5;--plan-line:#d2dad4;--plan-ink:#43534a;
+ position:relative;cursor:pointer;
+}
+#devis .form-plan-grid .form-plan-signature{--plan-tint:#e3f6e8;--plan-line:#84bd97;--plan-ink:#205a38}
+#devis .form-plan-grid .form-plan-prestige{--plan-tint:#f7f1e6;--plan-line:#dacbb3;--plan-ink:#695437}
 #devis .form-plan-grid input{position:absolute;width:1px;height:1px;clip-path:inset(50%);padding:0;min-height:0}
 #devis .form-plan-grid label>span{
- display:grid;gap:3px;justify-items:center;align-content:center;min-height:58px;padding:7px 2px;
- border:1px solid #d7e3da;border-radius:10px;background:#fbfdfb;
- font-size:clamp(.7rem,2.9vw,.86rem);line-height:1.15;
+ display:grid;gap:5px;justify-items:center;align-content:center;min-height:82px;padding:10px 3px;
+ border:1px solid var(--plan-line);border-radius:13px;background:linear-gradient(160deg,#fff,var(--plan-tint));
+ color:#202823;box-shadow:0 2px 5px #1427190a;
+ font-size:clamp(.68rem,3vw,.87rem);line-height:1.15;
 }
-#devis .form-plan-grid small{color:#496354;font-size:.76rem}
-#devis .form-plan-signature>span{background:#f1fcf4;border-color:#a7dbb7}
-#devis .form-plan-grid input:checked+span{border-color:#239654;background:#e0f9e7;box-shadow:inset 0 0 0 1px #239654}
-#devis .form-plan-grid input:focus-visible+span{outline:2px solid #15713a;outline-offset:2px}
+#devis .form-plan-grid label>span::before{
+ content:'';width:10px;height:10px;border:1px solid var(--plan-ink);border-radius:50%;
+}
+#devis .form-plan-grid small{color:var(--plan-ink);font-size:clamp(.77rem,3vw,.92rem);font-weight:700;font-variant-numeric:tabular-nums}
+#devis .form-plan-grid input:checked+span{
+ border-color:#277750;box-shadow:inset 0 0 0 1px #277750,0 4px 10px #27775020;
+}
+#devis .form-plan-grid input:checked+span::before{border-color:#277750;background:#277750;box-shadow:inset 0 0 0 2px white}
+#devis .form-plan-grid input:focus-visible+span,#devis .form-extras summary:focus-visible{outline:2px solid #15713a;outline-offset:2px}
 #devis .form-plan-unsure{display:flex;align-items:center;gap:6px;min-height:34px;margin-top:2px;color:#45594c}
 #devis .form-plan-unsure input{width:15px;height:15px;min-height:0;margin:0;accent-color:#24764e}
 #devis .form-extras summary{
- display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;list-style:none;
- min-height:38px;padding:7px 0;cursor:pointer;font-size:.81rem;font-weight:650;
+ display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;
+ min-height:48px;padding:8px 10px;border:1px solid #d3ded6;border-radius:10px;background:#f6f9f6;
+ cursor:pointer;font-size:.81rem;font-weight:650;
 }
 #devis .form-extras summary::-webkit-details-marker{display:none}
 #devis .form-extras summary::marker{content:''}
-#devis .form-extras summary span{margin-left:0}
+#devis .form-extras-label{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px;row-gap:2px}
+#devis .form-extras-label small{color:#53635a;font-size:.72rem;font-weight:450}
 #devis .form-extras-chevron{
- width:7px;height:7px;margin:0 4px 3px auto;border:solid currentColor;border-width:0 1.5px 1.5px 0;
- transform:rotate(45deg);color:#365945;
+ display:grid;place-items:center;flex:0 0 26px;height:26px;border-radius:50%;background:#e7efe9;color:#365945;
 }
-#devis .form-extras[open] .form-extras-chevron{margin-bottom:0;transform:rotate(225deg)}
-#devis .form-extras>div{display:grid;gap:10px}
+#devis .form-extras-chevron::before{
+ content:'';width:7px;height:7px;margin-bottom:3px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);
+}
+#devis .form-extras[open] .form-extras-chevron::before{margin-bottom:0;margin-top:3px;transform:rotate(225deg)}
+#devis .form-extras>div{display:grid;gap:10px;margin-top:10px}
+@media(hover:hover){
+ #devis .form-plan-grid label:hover input:not(:checked)+span{border-color:var(--plan-ink)}
+ #devis .form-extras summary:hover{background:#edf4ee}
+}
+@media(prefers-reduced-motion:no-preference){
+ #devis .form-plan-grid label>span{transition:border-color .2s,box-shadow .2s}
+ #devis .form-extras summary{transition:background-color .2s}
+}
 #devis .view-cta:disabled{opacity:.55;cursor:default}
 #devis #custom-need:has(select:disabled){color:#626c64}
 #devis #custom-need select:disabled{background:#f0f3f0;color:#646e66;cursor:not-allowed;opacity:1}

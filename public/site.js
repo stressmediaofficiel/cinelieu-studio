@@ -429,9 +429,10 @@ form.addEventListener('submit',async event=>{
   if(!response.ok||!result.ok)throw Error(result.error||'L’envoi a échoué.');
   form.reset();
   syncCustomNeed();
-  showStatus(result.confirmationSent
-   ?'Merci ! Votre demande a bien été envoyée. Un e-mail de confirmation vous a été adressé.'
-   :'Merci ! Votre demande a bien été envoyée.');
+  const receipt='Merci ! Votre demande '+result.reference+' a bien été envoyée.';
+  showStatus(receipt+(result.confirmationSent
+   ?' Un e-mail de confirmation vous a été adressé.'
+   :' L’e-mail de confirmation n’a pas pu être envoyé.'));
  }catch(error){showStatus(error.name==='TimeoutError'?'L’envoi n’a pas pu être confirmé. Vous pouvez nous écrire par e-mail.':error.message,true)}
  finally{submit.disabled=false;window.turnstile.reset(widget)}
 });

@@ -20,8 +20,8 @@
   <meta property="og:image:alt" content="CINÉLIEU Studio, des lieux qui prennent vie.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/logo-cinelieu.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=contact-confirmation">
-  <script type="module" src="/site.js?v=contact-confirmation"></script>
+  <link rel="stylesheet" href="/styles.css?v=contact-reference">
+  <script type="module" src="/site.js?v=contact-reference"></script>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -324,7 +324,7 @@
         <div class="form-plan-grid">
           <label><input type="radio" name="formule" value="essentiel" required><span><strong>Essentiel</strong><small>69 €</small></span></label>
           <label class="form-plan-signature"><input type="radio" name="formule" value="signature"><span><strong>Signature</strong><small>99 €</small></span></label>
-          <label><input type="radio" name="formule" value="prestige"><span><strong>Prestige</strong><small>149 €</small></span></label>
+          <label class="form-plan-prestige"><input type="radio" name="formule" value="prestige"><span><strong>Prestige</strong><small>149 €</small></span></label>
         </div>
         <label class="form-plan-unsure"><input type="radio" name="formule" value="autre" aria-controls="custom-need"> Autre</label>
       </fieldset>
@@ -336,7 +336,7 @@
       </select></label>
       <label>Votre projet<textarea name="message" rows="3" required maxlength="2000" placeholder="Ex. Une vidéo pour présenter mon chalet sur Instagram."></textarea></label>
       <details class="form-extras">
-        <summary>Ajouter mes coordonnées ou un lien <span>Facultatif</span><i class="form-extras-chevron" aria-hidden="true"></i></summary>
+        <summary><span class="form-extras-label">Ajouter mes coordonnées ou un lien <small>Facultatif</small></span><span class="form-extras-chevron" aria-hidden="true"></span></summary>
         <div>
           <div class="form-row"><label>Nom<input name="nom" autocomplete="name" maxlength="100"></label><label>Entreprise<input name="entreprise" autocomplete="organization" maxlength="150"></label></div>
           <label>Lien de votre annonce<input name="annonce" type="text" inputmode="url" autocapitalize="none" spellcheck="false" maxlength="1000" placeholder="https://…"></label>

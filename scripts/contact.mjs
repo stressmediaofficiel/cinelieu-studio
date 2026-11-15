@@ -1,12 +1,15 @@
 const recipient='contact@cinelieu.com';
-export const confirmationMessage={
+const confirmationMessage=(reference,selection)=>({
  displayName:'CINÉLIEU Studio',
- subject:'Votre demande a bien été reçue — CINÉLIEU Studio',
+ subject:'Votre demande '+reference+' a bien été reçue — CINÉLIEU Studio',
  text:[
   'Bonjour,',
   '',
   'Merci pour votre message. Votre demande a bien été reçue par CINÉLIEU Studio.',
-  'Notre équipe reviendra vers vous dans les meilleurs délais pour échanger sur votre projet.',
+  'Numéro de demande : '+reference,
+  ...selection,
+  '',
+  'Notre équipe va examiner votre demande et reviendra vers vous pour échanger sur votre projet.',
   '',
   'Si vous souhaitez ajouter une précision, vous pouvez répondre directement à cet e-mail.',
   '',
@@ -14,7 +17,7 @@ export const confirmationMessage={
   'L’équipe CINÉLIEU Studio',
   'https://cinelieu.com/'
  ].join('\n')
-};
+});
 const choices={pack:'Des vidéos pour plusieurs biens','sur-mesure':'Un projet sur mesure',autre:'Une question / autre demande'};
 const plans={essentiel:'Essentiel (69 €)',signature:'Signature (99 €)',prestige:'Prestige (149 €)'};
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -63,7 +66,9 @@ export async function contact(request,env,requestFetch=fetch){
   const verify=await requestFetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:new URLSearchParams({secret:env.TURNSTILE_SECRET_KEY,response:data.token}),signal:AbortSignal.timeout(6500)});
   const result=await verify.json();
   if(!verify.ok||!result.success||result.hostname!==url.hostname||result.action!=='contact')return failure('La vérification antispam a expiré. Réessayez.',403);
+  const reference='CNL-'+crypto.randomUUID().replaceAll('-','').slice(0,12).toUpperCase();
   const fields=[
+   ['Numéro de demande',reference],
    ['E-mail',data.email],['Téléphone',data.telephone],['Nom',data.nom],['Entreprise',data.entreprise],
    ['Besoin',custom?topic:null],['Formule',custom?'Autre':topic],['Annonce',data.annonce]
   ];
@@ -74,11 +79,12 @@ export async function contact(request,env,requestFetch=fetch){
    body:JSON.stringify(payload),
    signal:AbortSignal.timeout(8500)
   });
-  const send=await sendMail({to:[recipient],displayName:'CINÉLIEU Studio – Formulaire',subject:'Demande CINÉLIEU — '+topic,text});
+  const send=await sendMail({to:[recipient],displayName:'CINÉLIEU Studio – Formulaire',subject:'Demande '+reference+' — '+topic,text});
   if(!send.ok)return failure('Le service de messagerie ne répond pas. Réessayez.',502);
-  const confirmationSent=await sendMail({...confirmationMessage,to:[data.email]})
+  const selection=custom?['Formule : Autre','Besoin : '+topic]:['Formule : '+topic];
+  const confirmationSent=await sendMail({...confirmationMessage(reference,selection),to:[data.email]})
    .then(result=>result.ok,()=>false);
-  return response({ok:true,confirmationSent});
+  return response({ok:true,reference,confirmationSent});
  }catch{return failure('Le service de messagerie est momentanément indisponible.',502)}
 }
 export default {
