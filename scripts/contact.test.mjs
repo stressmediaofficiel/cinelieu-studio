@@ -23,7 +23,7 @@ test('le fournisseur reçoit le destinataire fixe et les données validées',asy
   if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test'});
   sent=JSON.parse(init.body);return Response.json({id:'fake-for-test'});
  });
- assert.equal(r.status,200);assert.deepEqual(sent.to,['cinelieupro@gmail.com']);assert.equal(sent.reply_to,good.email);
+ assert.equal(r.status,200);assert.deepEqual(sent.to,['contact@cinelieu.com']);assert.equal(sent.reply_to,good.email);
 });
 test('un rejet du fournisseur est rapporté comme une erreur',async()=>{
  const r=await contact(post(good),env,async(url)=>url.includes('turnstile')?Response.json({success:true,hostname:'example.test'}):new Response('',{status:503}));

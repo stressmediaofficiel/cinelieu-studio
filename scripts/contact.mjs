@@ -1,4 +1,4 @@
-const recipient='cinelieupro@gmail.com';
+const recipient='contact@cinelieu.com';
 const choices={aperçu:'Aperçu de mon bien',unité:'Vidéo à l’unité',pack:'Pack professionnel','sur-mesure':'Accompagnement sur mesure',autre:'Autre demande'};
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const failure=(error,status=400)=>response({ok:false,error},status);
