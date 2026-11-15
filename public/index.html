@@ -20,7 +20,7 @@
   <meta property="og:image:alt" content="CINÉLIEU Studio, des lieux qui prennent vie.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/logo-cinelieu.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=contact-reference">
+  <link rel="stylesheet" href="/styles.css?v=contact-plans">
   <script type="module" src="/site.js?v=contact-receipt"></script>
 </head>
 <body>
@@ -322,9 +322,30 @@
       <fieldset class="form-plans">
         <legend>Votre formule</legend>
         <div class="form-plan-grid">
-          <label><input type="radio" name="formule" value="essentiel" required><span><strong>Essentiel</strong><small>69 €</small></span></label>
-          <label class="form-plan-signature"><input type="radio" name="formule" value="signature"><span><strong>Signature</strong><small>99 €</small></span></label>
-          <label class="form-plan-prestige"><input type="radio" name="formule" value="prestige"><span><strong>Prestige</strong><small>149 €</small></span></label>
+          <label>
+            <input type="radio" name="formule" value="essentiel" required>
+            <span>
+              <svg class="form-plan-mark" aria-hidden="true"><use href="#wide"/></svg>
+              <svg class="form-plan-check" aria-hidden="true"><use href="#check"/></svg>
+              <strong>Essentiel</strong><small>69&nbsp;€</small>
+            </span>
+          </label>
+          <label class="form-plan-signature">
+            <input type="radio" name="formule" value="signature">
+            <span>
+              <svg class="form-plan-mark" aria-hidden="true"><use href="#layers"/></svg>
+              <svg class="form-plan-check" aria-hidden="true"><use href="#check"/></svg>
+              <strong>Signature</strong><small>99&nbsp;€</small>
+            </span>
+          </label>
+          <label class="form-plan-prestige">
+            <input type="radio" name="formule" value="prestige">
+            <span>
+              <svg class="form-plan-mark" aria-hidden="true"><use href="#spark"/></svg>
+              <svg class="form-plan-check" aria-hidden="true"><use href="#check"/></svg>
+              <strong>Prestige</strong><small>149&nbsp;€</small>
+            </span>
+          </label>
         </div>
         <label class="form-plan-unsure"><input type="radio" name="formule" value="autre" aria-controls="custom-need"> Autre</label>
       </fieldset>

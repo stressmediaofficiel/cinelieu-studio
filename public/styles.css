@@ -545,28 +545,48 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 
 #devis .form-plans{margin:0;min-width:0;padding:0;border:0}
 #devis .form-plans legend{margin-bottom:7px;font-size:.81rem;font-weight:650}
-#devis .form-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#devis .form-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 #devis .form-plan-grid label{
- --plan-tint:#f5f7f5;--plan-line:#d2dad4;--plan-ink:#43534a;
+ --plan-top:#edf0ee;--plan-bottom:#dce4df;--plan-light:#fff;
+ --plan-line:#bac8be;--plan-ink:#1a2a22;--plan-accent:#324d3d;--plan-mark:#f9fcfa;
  position:relative;cursor:pointer;
 }
-#devis .form-plan-grid .form-plan-signature{--plan-tint:#e3f6e8;--plan-line:#84bd97;--plan-ink:#205a38}
-#devis .form-plan-grid .form-plan-prestige{--plan-tint:#f7f1e6;--plan-line:#dacbb3;--plan-ink:#695437}
+#devis .form-plan-grid .form-plan-signature{
+ --plan-top:#1b5338;--plan-bottom:#0b261c;--plan-light:#347952;
+ --plan-line:#3e845b;--plan-ink:#f5fff8;--plan-accent:#b1f6c6;--plan-mark:#255440;
+}
+#devis .form-plan-grid .form-plan-prestige{
+ --plan-top:#4e3e2f;--plan-bottom:#241e19;--plan-light:#745b40;
+ --plan-line:#9a7b55;--plan-ink:#fff8ee;--plan-accent:#f4d8a8;--plan-mark:#584432;
+}
 #devis .form-plan-grid input{position:absolute;width:1px;height:1px;clip-path:inset(50%);padding:0;min-height:0}
 #devis .form-plan-grid label>span{
- display:grid;gap:5px;justify-items:center;align-content:center;min-height:82px;padding:10px 3px;
- border:1px solid var(--plan-line);border-radius:13px;background:linear-gradient(160deg,#fff,var(--plan-tint));
- color:#202823;box-shadow:0 2px 5px #1427190a;
- font-size:clamp(.68rem,3vw,.87rem);line-height:1.15;
+ display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:1fr auto auto;
+ column-gap:3px;row-gap:4px;min-height:108px;padding:9px clamp(7px,2vw,13px) 11px;
+ border:1px solid var(--plan-line);border-radius:14px;color:var(--plan-ink);
+ background:radial-gradient(ellipse at 8% 0%,var(--plan-light),transparent 72%),linear-gradient(150deg,var(--plan-top),var(--plan-bottom));
+ box-shadow:inset 0 1px 0 #ffffff45,0 3px 7px #192b221f;
+ line-height:1.1;
 }
-#devis .form-plan-grid label>span::before{
- content:'';width:10px;height:10px;border:1px solid var(--plan-ink);border-radius:50%;
+#devis .form-plan-grid strong,#devis .form-plan-grid small{grid-column:1/-1}
+#devis .form-plan-grid strong{font-size:clamp(.69rem,2.9vw,.87rem);font-weight:650}
+#devis .form-plan-grid small{
+ color:var(--plan-accent);font-size:clamp(1rem,4.8vw,1.35rem);font-weight:690;font-variant-numeric:tabular-nums;letter-spacing:-.035em;
 }
-#devis .form-plan-grid small{color:var(--plan-ink);font-size:clamp(.77rem,3vw,.92rem);font-weight:700;font-variant-numeric:tabular-nums}
+#devis .form-plan-grid svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+#devis .form-plan-mark{
+ width:30px;height:30px;padding:6px;border:1px solid var(--plan-line);border-radius:9px;
+ background:var(--plan-mark);color:var(--plan-accent);stroke-width:1.65;
+}
+#devis .form-plan-check{
+ width:17px;height:17px;padding:2px;border:1px solid currentColor;border-radius:50%;color:var(--plan-accent);stroke-width:3;
+}
+#devis .form-plan-check use{visibility:hidden}
 #devis .form-plan-grid input:checked+span{
- border-color:#277750;box-shadow:inset 0 0 0 1px #277750,0 4px 10px #27775020;
+ border-color:#1a9750;box-shadow:inset 0 0 0 1px #28cf66,0 0 0 2px #28cf663b,0 4px 10px #155f3829;
 }
-#devis .form-plan-grid input:checked+span::before{border-color:#277750;background:#277750;box-shadow:inset 0 0 0 2px white}
+#devis .form-plan-grid input:checked+span .form-plan-check{border-color:#28cf66;background:#28cf66;color:#0b3219}
+#devis .form-plan-grid input:checked+span .form-plan-check use{visibility:visible}
 #devis .form-plan-grid input:focus-visible+span,#devis .form-extras summary:focus-visible{outline:2px solid #15713a;outline-offset:2px}
 #devis .form-plan-unsure{display:flex;align-items:center;gap:6px;min-height:34px;margin-top:2px;color:#45594c}
 #devis .form-plan-unsure input{width:15px;height:15px;min-height:0;margin:0;accent-color:#24764e}
@@ -588,11 +608,12 @@ html.motion .view-cta:is(.is-visible,:hover,:focus-visible) .view-cta-accent svg
 #devis .form-extras[open] .form-extras-chevron::before{margin-bottom:0;margin-top:3px;transform:rotate(225deg)}
 #devis .form-extras>div{display:grid;gap:10px;margin-top:10px}
 @media(hover:hover){
- #devis .form-plan-grid label:hover input:not(:checked)+span{border-color:var(--plan-ink)}
+ #devis .form-plan-grid label:hover input:not(:checked)+span{border-color:var(--plan-accent);box-shadow:inset 0 1px 0 #ffffff65,0 6px 12px #192b2229}
  #devis .form-extras summary:hover{background:#edf4ee}
 }
 @media(prefers-reduced-motion:no-preference){
- #devis .form-plan-grid label>span{transition:border-color .2s,box-shadow .2s}
+ #devis .form-plan-grid label>span{transition:border-color .2s,box-shadow .2s,translate .2s}
+ #devis .form-plan-grid label:active>span{translate:0 1px}
  #devis .form-extras summary{transition:background-color .2s}
 }
 #devis .view-cta:disabled{opacity:.55;cursor:default}
