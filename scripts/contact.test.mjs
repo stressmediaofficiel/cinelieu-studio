@@ -32,7 +32,25 @@ test('le fournisseur reçoit le destinataire fixe et les données validées',asy
   assert.ok(message.text.includes('Numéro de demande : '+reference));
  }
  assert.deepEqual(sent[0].to,['contact@cinelieu.com']);assert.match(sent[0].text,/E-mail : camille@example\.test/);assert.match(sent[0].text,/Signature \(99 €\)/);assert.match(sent[0].text,/https:\/\/example\.test\/chalet/);assert.match(sent[0].text,/\+33 6/);
- assert.deepEqual(sent[1].to,[good.email]);assert.match(sent[1].text,/Votre demande a bien été reçue/);assert.match(sent[1].text,/Formule : Signature \(99 €\)/);assert(!sent[1].text.includes(good.message));
+ assert.deepEqual(sent[1].to,[good.email]);assert.match(sent[1].text,/Votre demande a bien été reçue/);assert.match(sent[1].text,/Formule : Signature \(99 €\)/);assert(!sent[1].text.includes(good.message));assert(!sent[1].html.includes(good.message));
+});
+test('une demande sans description déclenche les deux e-mails',async()=>{
+ const {message,...payload}=good;
+ const sent=[];
+ const r=await contact(post(payload),env,async(url,init)=>{
+  if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
+  sent.push(JSON.parse(init.body));
+  return new Response(null,{status:204});
+ });
+ assert.equal(r.status,200);
+ const {reference,confirmationSent}=await r.json();
+ assert.equal(confirmationSent,true);
+ assert.equal(sent.length,2);
+ assert.match(sent[0].text,/Formule : Essentiel \(69 €\)$/);
+ assert.ok(sent[1].text.includes(reference));
+ assert.ok(sent[1].html.includes(reference));
+ assert.match(sent[1].html,/Essentiel \(69 €\)/);
+ assert.match(sent[1].html,/logo-cinelieu-email\.png/);
 });
 test('un rejet du fournisseur est rapporté comme une erreur sans envoyer de confirmation',async()=>{
  let attempts=0;

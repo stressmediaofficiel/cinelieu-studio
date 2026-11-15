@@ -1,23 +1,77 @@
 const recipient='contact@cinelieu.com';
-const confirmationMessage=(reference,selection)=>({
- displayName:'CINÉLIEU Studio',
- subject:'Votre demande '+reference+' a bien été reçue — CINÉLIEU Studio',
- text:[
-  'Bonjour,',
-  '',
-  'Merci pour votre message. Votre demande a bien été reçue par CINÉLIEU Studio.',
-  'Numéro de demande : '+reference,
-  ...selection,
-  '',
-  'Notre équipe va examiner votre demande et reviendra vers vous pour échanger sur votre projet.',
-  '',
-  'Si vous souhaitez ajouter une précision, vous pouvez répondre directement à cet e-mail.',
-  '',
-  'À bientôt,',
-  'L’équipe CINÉLIEU Studio',
-  'https://cinelieu.com/'
- ].join('\n')
-});
+function confirmationMessage(reference,selection){
+ const heading='Votre demande a bien été reçue';
+ const nextStep='Notre équipe va examiner votre demande et vous répondra par e-mail.';
+ const reply='Vous pouvez répondre à cet e-mail pour ajouter une précision.';
+ const details=[['Numéro de demande',reference],...selection];
+ const rows=details.map(([label,value])=>`
+  <tr>
+   <td style="padding:0 0 13px;font-size:13px;line-height:1.5;color:#42604c" class="receipt-muted">${label}<br>
+    <strong style="font-size:16px;color:#172b1e" class="receipt-value">${value}</strong>
+   </td>
+  </tr>`).join('');
+ return {
+  displayName:'CINÉLIEU Studio',
+  subject:'Demande reçue · '+reference+' — CINÉLIEU Studio',
+  text:[
+   heading,
+   '',
+   ...details.map(([label,value])=>label+' : '+value),
+   '',
+   nextStep,
+   reply,
+   '',
+   'L’équipe CINÉLIEU Studio',
+   'https://cinelieu.com/'
+  ].join('\n'),
+  html:`<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<style>
+ @media (prefers-color-scheme:dark) {
+  .receipt-bg{background:#111713!important}
+  .receipt-card{background:#1b241e!important;color:#f6fbf7!important;border-color:#344b3b!important}
+  .receipt-panel{background:#243529!important;border-color:#4c6b55!important}
+  .receipt-muted,.receipt-link{color:#b9d7c2!important}
+  .receipt-value{color:#f1faf3!important}
+ }
+</style>
+</head>
+<body class="receipt-bg" style="margin:0;background:#f2f5f2">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="receipt-bg" style="background:#f2f5f2">
+ <tr><td align="center" style="padding:24px 12px">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="receipt-card" style="width:100%;max-width:520px;background:#fff;color:#171717;border:1px solid #dce5de;border-radius:18px;font-family:Arial,sans-serif">
+   <tr><td bgcolor="#1b1b1b" style="padding:19px 24px;border-top:3px solid #28cf66;border-radius:17px 17px 0 0;color:#ffffff">
+    <table role="presentation" cellpadding="0" cellspacing="0">
+     <tr>
+      <td width="46" style="padding-right:12px"><img src="https://cinelieu.com/assets/logo-cinelieu-email.png" width="40" height="40" alt="" style="display:block;border:0;border-radius:10px"></td>
+      <td style="font-size:19px;font-weight:bold;letter-spacing:-.4px;color:#fff">CINÉLIEU <span style="font-size:11px;font-weight:normal;letter-spacing:1.8px">STUDIO</span></td>
+     </tr>
+    </table>
+   </td></tr>
+   <tr><td style="padding:27px 24px 28px">
+    <h1 style="margin:0 0 12px;font-size:29px;line-height:1.12;font-weight:700;letter-spacing:-.7px">${heading}.</h1>
+    <p class="receipt-muted" style="margin:0 0 20px;font-size:16px;line-height:1.55;color:#414e45">${nextStep}</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="receipt-panel" style="margin:0 0 19px;background:#edf8ef;border:1px solid #c9e4d1;border-left:4px solid #28cf66;border-radius:10px">
+     <tr><td style="padding:14px 14px 1px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+     </td></tr>
+    </table>
+    <p class="receipt-muted" style="margin:0;font-size:14px;line-height:1.55;color:#414e45">${reply}</p>
+   </td></tr>
+   <tr><td style="padding:15px 24px 17px;border-top:1px solid #dce5de;font-size:13px;line-height:1.6">
+    <a href="https://cinelieu.com/" class="receipt-link" style="color:#225739;text-decoration:underline;font-weight:bold">cinelieu.com</a>
+   </td></tr>
+  </table>
+ </td></tr>
+</table>
+</body>
+</html>`
+ };
+}
 const choices={pack:'Des vidéos pour plusieurs biens','sur-mesure':'Un projet sur mesure',autre:'Une question / autre demande'};
 const plans={essentiel:'Essentiel (69 €)',signature:'Signature (99 €)',prestige:'Prestige (149 €)'};
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -41,8 +95,8 @@ export async function contact(request,env,requestFetch=fetch){
  try{raw=await readBounded(request)}catch{return failure('Demande invalide ou trop longue.')}
  if(!raw||typeof raw!=='object'||Array.isArray(raw)||raw.website||raw.consentement!=='oui')return failure('Vérifiez les champs et le consentement.');
  const data={};
- const required={email:254,formule:20,message:2000,token:2048};
- const optional={besoin:20,telephone:32,annonce:1000,nom:100,entreprise:150};
+ const required={email:254,formule:20,token:2048};
+ const optional={message:2000,besoin:20,telephone:32,annonce:1000,nom:100,entreprise:150};
  for(const [key,max] of Object.entries({...required,...optional})){
   const value=raw[key]??'';
   if(typeof value!=='string')return failure('Vérifiez les champs de votre demande.');
@@ -72,8 +126,8 @@ export async function contact(request,env,requestFetch=fetch){
    ['E-mail',data.email],['Téléphone',data.telephone],['Nom',data.nom],['Entreprise',data.entreprise],
    ['Besoin',custom?topic:null],['Formule',custom?'Autre':topic],['Annonce',data.annonce]
   ];
-  const text=fields.filter(([,value])=>value).map(([label,value])=>label+' : '+value)
-   .concat('',data.message).join('\n');
+  const summary=fields.filter(([,value])=>value).map(([label,value])=>label+' : '+value).join('\n');
+  const text=data.message?summary+'\n\n'+data.message:summary;
   const sendMail=payload=>requestFetch('https://api.mail.hostinger.com/api/v1/mailboxes/'+encodeURIComponent(env.HOSTINGER_MAILBOX_ID)+'/send',{
    method:'POST',headers:{Authorization:'Bearer '+env.HOSTINGER_MAIL_TOKEN,'Content-Type':'application/json'},
    body:JSON.stringify(payload),
@@ -81,7 +135,7 @@ export async function contact(request,env,requestFetch=fetch){
   });
   const send=await sendMail({to:[recipient],displayName:'CINÉLIEU Studio – Formulaire',subject:'Demande '+reference+' — '+topic,text});
   if(!send.ok)return failure('Le service de messagerie ne répond pas. Réessayez.',502);
-  const selection=custom?['Formule : Autre','Besoin : '+topic]:['Formule : '+topic];
+  const selection=custom?[['Formule','Autre'],['Besoin',topic]]:[['Formule',topic]];
   const confirmationSent=await sendMail({...confirmationMessage(reference,selection),to:[data.email]})
    .then(result=>result.ok,()=>false);
   return response({ok:true,reference,confirmationSent});

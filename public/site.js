@@ -417,8 +417,6 @@ form.addEventListener('submit',async event=>{
  event.preventDefault();
  if(widget===null||submit.disabled||!form.reportValidity())return;
  const data=Object.fromEntries(new FormData(form));
- data.message=data.message.trim();
- if(!data.message){showStatus('Décrivez votre projet en quelques mots.',true);return}
  data.token=window.turnstile.getResponse(widget);
  if(!data.token){showStatus('Patientez un instant ou terminez la vérification antispam.',true);return}
  submit.disabled=true;
