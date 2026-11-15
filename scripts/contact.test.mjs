@@ -18,16 +18,32 @@ test('un jeton d’un autre site ne permet pas l’envoi',async()=>{
  const r=await contact(post(good),env,async()=>Response.json({success:true,hostname:'other.test'}));assert.equal(r.status,403);
 });
 test('le fournisseur reçoit le destinataire fixe et les données validées',async()=>{
- let sent;
+ const sent=[];
  const r=await contact(post({...good,formule:'signature',telephone:'+33 6 01 02 03 04',annonce:'example.test/chalet',to:'not-allowed@example.test'}),env,async(url,init)=>{
   if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
-  sent=JSON.parse(init.body);return Response.json({id:'fake-for-test'});
+  sent.push(JSON.parse(init.body));return new Response(null,{status:204});
  });
- assert.equal(r.status,200);assert.deepEqual(sent.to,['contact@cinelieu.com']);assert.match(sent.text,/E-mail : camille@example\.test/);assert.match(sent.text,/Signature \(99 €\)/);assert.match(sent.text,/https:\/\/example\.test\/chalet/);assert.match(sent.text,/06|\+33 6/);
+ assert.equal(r.status,200);assert.deepEqual(await r.json(),{ok:true,confirmationSent:true});
+ assert.deepEqual(sent[0].to,['contact@cinelieu.com']);assert.match(sent[0].text,/E-mail : camille@example\.test/);assert.match(sent[0].text,/Signature \(99 €\)/);assert.match(sent[0].text,/https:\/\/example\.test\/chalet/);assert.match(sent[0].text,/\+33 6/);
+ assert.deepEqual(sent[1].to,[good.email]);assert.match(sent[1].text,/Votre demande a bien été reçue/);assert(!sent[1].text.includes(good.message));
 });
-test('un rejet du fournisseur est rapporté comme une erreur',async()=>{
- const r=await contact(post(good),env,async(url)=>url.includes('turnstile')?Response.json({success:true,hostname:'example.test',action:'contact'}):new Response('',{status:503}));
+test('un rejet du fournisseur est rapporté comme une erreur sans envoyer de confirmation',async()=>{
+ let attempts=0;
+ const r=await contact(post(good),env,async(url)=>{
+  if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
+  attempts++;
+  return new Response('',{status:503});
+ });
  assert.equal(r.status,502);assert.equal((await r.json()).ok,false);
+ assert.equal(attempts,1);
+});
+test('un échec de confirmation conserve le succès de la demande transmise',async()=>{
+ const r=await contact(post(good),env,async(url,init)=>{
+  if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
+  if(JSON.parse(init.body).to[0]===good.email)throw Error('timeout');
+  return new Response(null,{status:204});
+ });
+ assert.deepEqual(await r.json(),{ok:true,confirmationSent:false});
 });
 test('le besoin personnalisé est requis uniquement pour Autre',async()=>{
  const never=()=>assert.fail('appel externe inattendu');
@@ -35,7 +51,8 @@ test('le besoin personnalisé est requis uniquement pour Autre',async()=>{
  let sent;
  const provider=async(url,init)=>{
   if(url.includes('turnstile'))return Response.json({success:true,hostname:'example.test',action:'contact'});
-  sent=JSON.parse(init.body);
+  const payload=JSON.parse(init.body);
+  if(payload.to[0]==='contact@cinelieu.com')sent=payload;
   return new Response(null,{status:204});
  };
  assert.equal((await contact(post({...good,formule:'autre',besoin:'pack'}),env,provider)).status,200);

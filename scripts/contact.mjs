@@ -1,4 +1,20 @@
 const recipient='contact@cinelieu.com';
+export const confirmationMessage={
+ displayName:'CINÉLIEU Studio',
+ subject:'Votre demande a bien été reçue — CINÉLIEU Studio',
+ text:[
+  'Bonjour,',
+  '',
+  'Merci pour votre message. Votre demande a bien été reçue par CINÉLIEU Studio.',
+  'Notre équipe reviendra vers vous dans les meilleurs délais pour échanger sur votre projet.',
+  '',
+  'Si vous souhaitez ajouter une précision, vous pouvez répondre directement à cet e-mail.',
+  '',
+  'À bientôt,',
+  'L’équipe CINÉLIEU Studio',
+  'https://cinelieu.com/'
+ ].join('\n')
+};
 const choices={pack:'Des vidéos pour plusieurs biens','sur-mesure':'Un projet sur mesure',autre:'Une question / autre demande'};
 const plans={essentiel:'Essentiel (69 €)',signature:'Signature (99 €)',prestige:'Prestige (149 €)'};
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -53,13 +69,16 @@ export async function contact(request,env,requestFetch=fetch){
   ];
   const text=fields.filter(([,value])=>value).map(([label,value])=>label+' : '+value)
    .concat('',data.message).join('\n');
-  const send=await requestFetch('https://api.mail.hostinger.com/api/v1/mailboxes/'+encodeURIComponent(env.HOSTINGER_MAILBOX_ID)+'/send',{
+  const sendMail=payload=>requestFetch('https://api.mail.hostinger.com/api/v1/mailboxes/'+encodeURIComponent(env.HOSTINGER_MAILBOX_ID)+'/send',{
    method:'POST',headers:{Authorization:'Bearer '+env.HOSTINGER_MAIL_TOKEN,'Content-Type':'application/json'},
-   body:JSON.stringify({to:[recipient],displayName:'CINÉLIEU Studio – Formulaire',subject:'Demande CINÉLIEU — '+topic,text}),
+   body:JSON.stringify(payload),
    signal:AbortSignal.timeout(8500)
   });
+  const send=await sendMail({to:[recipient],displayName:'CINÉLIEU Studio – Formulaire',subject:'Demande CINÉLIEU — '+topic,text});
   if(!send.ok)return failure('Le service de messagerie ne répond pas. Réessayez.',502);
-  return response({ok:true});
+  const confirmationSent=await sendMail({...confirmationMessage,to:[data.email]})
+   .then(result=>result.ok,()=>false);
+  return response({ok:true,confirmationSent});
  }catch{return failure('Le service de messagerie est momentanément indisponible.',502)}
 }
 export default {

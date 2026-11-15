@@ -20,8 +20,8 @@
   <meta property="og:image:alt" content="CINÉLIEU Studio, des lieux qui prennent vie.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/logo-cinelieu.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/styles.css?v=contact-formules">
-  <script type="module" src="/site.js?v=contact-formules"></script>
+  <link rel="stylesheet" href="/styles.css?v=contact-confirmation">
+  <script type="module" src="/site.js?v=contact-confirmation"></script>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -318,13 +318,7 @@
       <a class="btn contact-mail" href="mailto:contact@cinelieu.com?subject=Demande%20de%20devis%20CIN%C3%89LIEU%20Studio">Demander un devis par e-mail <svg aria-hidden="true"><use href="#up-right"/></svg></a>
     </div>
     <form class="form" id="devis" method="post" action="/api/contact" data-reveal aria-label="Demande de devis">
-      <div class="form-email">
-        <label>Votre e-mail<input name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"></label>
-        <div class="email-shortcuts" aria-label="Compléter le domaine de votre e-mail" hidden>
-          <button type="button" data-email-domain="gmail.com">@gmail.com</button>
-          <button type="button" data-email-domain="hotmail.com">@hotmail.com</button>
-        </div>
-      </div>
+      <label>Votre e-mail<input name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required maxlength="254"></label>
       <fieldset class="form-plans">
         <legend>Votre formule</legend>
         <div class="form-plan-grid">
@@ -342,7 +336,7 @@
       </select></label>
       <label>Votre projet<textarea name="message" rows="3" required maxlength="2000" placeholder="Ex. Une vidéo pour présenter mon chalet sur Instagram."></textarea></label>
       <details class="form-extras">
-        <summary>Ajouter mes coordonnées ou un lien <span>Facultatif</span></summary>
+        <summary>Ajouter mes coordonnées ou un lien <span>Facultatif</span><i class="form-extras-chevron" aria-hidden="true"></i></summary>
         <div>
           <div class="form-row"><label>Nom<input name="nom" autocomplete="name" maxlength="100"></label><label>Entreprise<input name="entreprise" autocomplete="organization" maxlength="150"></label></div>
           <label>Lien de votre annonce<input name="annonce" type="text" inputmode="url" autocapitalize="none" spellcheck="false" maxlength="1000" placeholder="https://…"></label>

@@ -358,7 +358,6 @@ if('IntersectionObserver'in window&&!reduced.matches){
 }
 
 const form=$('#devis'),status=$('#form-status'),formMode=$('#form-mode'),submit=$('button[type=submit]',form);
-const emailField=form.elements.email,emailShortcuts=$('.email-shortcuts',form);
 const needField=form.elements.besoin;
 function syncCustomNeed(){
  const custom=form.elements.formule.value==='autre';
@@ -375,15 +374,6 @@ for(const link of $$('[data-plan]')){
  });
 }
 syncCustomNeed();
-emailShortcuts.hidden=false;
-for(const button of $$('[data-email-domain]',emailShortcuts)){
- button.addEventListener('click',()=>{
-  const local=emailField.value.trim().split('@')[0];
-  emailField.focus();
-  if(!local)return;
-  emailField.value=local+'@'+button.dataset.emailDomain;
- });
-}
 let widget=null;
 function showStatus(message,error=false){
  status.textContent=message;
@@ -434,12 +424,14 @@ form.addEventListener('submit',async event=>{
  submit.disabled=true;
  showStatus('Envoi en cours…');
  try{
-  const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(22000)});
+  const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(28000)});
   const result=await response.json();
   if(!response.ok||!result.ok)throw Error(result.error||'L’envoi a échoué.');
   form.reset();
   syncCustomNeed();
-  showStatus('Merci ! Votre demande a bien été envoyée.');
+  showStatus(result.confirmationSent
+   ?'Merci ! Votre demande a bien été envoyée. Un e-mail de confirmation vous a été adressé.'
+   :'Merci ! Votre demande a bien été envoyée.');
  }catch(error){showStatus(error.name==='TimeoutError'?'L’envoi n’a pas pu être confirmé. Vous pouvez nous écrire par e-mail.':error.message,true)}
  finally{submit.disabled=false;window.turnstile.reset(widget)}
 });
