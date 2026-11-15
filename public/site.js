@@ -190,7 +190,7 @@ function updateGalleryIrises(height){
  const top=gallery.getBoundingClientRect().top;
  // The markers retain their document positions while the cards are sticky.
  const positions=galleryMarks.map(mark=>top+mark.offsetTop);
- const travel=clamp(height*.38,140,310);
+ const travel=clamp(height*.52,150,490);
  for(let i=0;i<galleryIrises.length;i++){
   const iris=galleryIrises[i];
   if(!iris)continue;
